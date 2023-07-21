@@ -4,8 +4,10 @@ import axios from 'axios';
 import { styles } from '../../styles';
 import { slideIn } from '../../utils/motion';
 import { SectionWrapper } from '../../hoc';
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
+    const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
@@ -40,6 +42,7 @@ const SignIn = () => {
         enteredEmail.current.value='';
         enteredPassword.current.value='';
         confirmPassword.current.value='';
+        navigate('/signIn/expense');
        
       } else {
         console.log('Failed to sign In');

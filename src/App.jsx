@@ -2,15 +2,16 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './App.css';
-import { SignIn, SignUp } from './components';
+import { ExpenseTracker, SignIn, SignUp } from './components';
 
 function App() {
   return (
     <Router>
       <div className='relative z-0 bg-primary bg-hero-pattern bg-cover bg-no-repeat bg-center'>
         <Routes>
-          <Route path='/' element={<SignUp />} />
-          <Route path='/signIn' element={<SignIn />} />
+          <Route exact path='/' element={<SignUp />} />
+          <Route exact path='/signIn' element={<SignIn />} />
+          <Route exact path='/signIn/Expense' element={<ExpenseTracker />} />
         </Routes>
       </div>
     </Router>

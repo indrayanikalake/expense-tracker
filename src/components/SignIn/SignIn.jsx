@@ -4,10 +4,8 @@ import axios from 'axios';
 import { styles } from '../../styles';
 import { slideIn } from '../../utils/motion';
 import { SectionWrapper } from '../../hoc';
-import { useNavigate , Link } from 'react-router-dom';
 
-const SignUp = () => {
-  const navigate = useNavigate();
+const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
@@ -30,7 +28,7 @@ const SignUp = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDz2JJcOPvQ6aZWZ7JSkBxM2wuUziGzq80', {
+      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDz2JJcOPvQ6aZWZ7JSkBxM2wuUziGzq80', {
         email,
         password,
         returnSecureToken: true,
@@ -42,9 +40,9 @@ const SignUp = () => {
         enteredEmail.current.value='';
         enteredPassword.current.value='';
         confirmPassword.current.value='';
-       navigate('/signIn');
+       
       } else {
-        console.log('Failed to sign up');
+        console.log('Failed to sign In');
       }
     } catch (error) {
       console.log(error.message);
@@ -103,8 +101,7 @@ const SignUp = () => {
            required />
           </label>
           {error && <div className='text-red-500'>{error}</div>}
-          <button type='submit' component={ Link } to='/signIn'
-           className='bg-tertiary py-3 px-8 outline-none shadow-md shadow-primary font-bold text-white rounded-xl'>
+          <button type='submit' className='bg-tertiary py-3 px-8 outline-none shadow-md shadow-primary font-bold text-white rounded-xl'>
             {loading ? 'Sending...' : 'Send'}
           </button>
         </form>
@@ -113,4 +110,5 @@ const SignUp = () => {
   );
 };
 
-export default SectionWrapper(SignUp, 'signUp');
+export default SectionWrapper(SignIn, 'signIn');
+

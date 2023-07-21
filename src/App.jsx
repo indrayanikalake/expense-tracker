@@ -1,22 +1,20 @@
-import  React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import './App.css'
-import { SignUp } from './components';
+import './App.css';
+import { SignIn, SignUp } from './components';
 
 function App() {
-  
-
   return (
-    
-    <BrowserRouter>
-    <div className='relative z-0 bg-white bg-hero-pattern bg-cover bg-no-repeat bg-center'>
-    <SignUp />
-    </div>
-    </BrowserRouter>
-      
-   
-  )
+    <Router>
+      <div className='relative z-0 bg-primary bg-hero-pattern bg-cover bg-no-repeat bg-center'>
+        <Routes>
+          <Route path='/' element={<SignUp />} />
+          <Route path='/signIn' element={<SignIn />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;

@@ -6,6 +6,7 @@ import { SectionWrapper } from '../../hoc';
 import { styles } from '../../styles';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { github, mobile } from '../../assets';
 
 const View = () => {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ const View = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
    const idToken = localStorage.getItem('token')
- 
+   console.log(idToken);
 
     const handleSubmit =async (e) =>{
      e.preventDefault();
@@ -38,6 +39,7 @@ const View = () => {
             userName.current.value='';
             photoUrl.current.value='';
            navigate('/profile');
+           localStorage.setItem('isProfileComplete', true);
         }
      }catch(error){
         console.log(error);
@@ -50,36 +52,54 @@ const View = () => {
   return (
     
     <div>
-      <h1 className='text-white text-start'>Winners never quit, Quiters never win</h1>
-      <h1 className='text-white text-end'>Your Profile is 64% completed, A couple profile has higher
+      <h1 className='text-white text-start text-w-[28px]'>Winners never quit, Quiters never win</h1>
+      <h1 className='text-white text-end text-w-[28px]'>Your Profile is 64% completed, A couple profile has higher
       chances of landing a job 
       <Link to='/view'>Complete now</Link></h1>
-      <h3 className={`${styles.heroHeadText}`}>Contact Details.</h3>
+      <h3 className={`${styles.heroHeadText}`}>Details.</h3>
       <motion.div
       variants={fadeIn("up","tween",0.2,1)}>
       
-     <form onSubmit={handleSubmit}>
-        <label>
-            <span>Full name:</span>
+     <form onSubmit={handleSubmit}
+     className='flex flex-col bg-black text-white  mt-12 p-8 rounded-[5px] '
+     
+      >
+        <label className='mt-2 p-8' >
+            <span className='flex flex-row items-cnter justify-center'>
+               <img src={github} alt='github' 
+                 className='black-gradient w-10 h-10 rounded-full flex justify-center items-center cursor-pointer'
+                /> 
+                Full name:</span>
             <input
              type='text'
              name='name'
              ref={userName}
              placeholder='Your name please..'
+             className='bg-gold py-4 px-12
+             placeholder:text-white
+             text-white rounded-lg outlined-none border-none font-medium'
              required
             />
         </label>
-        <label>
-            <span>Profule photo url</span>
+        <label className='mt-2 p-8'>
+            <span className='flex flex-row items-center justify-center'>
+            <img src={mobile} alt='github' 
+                 className='black-gradient w-10 h-10 rounded-full flex justify-center items-center cursor-pointer'
+                /> Profile photo url</span>
             <input
              type='text'
              name='name'
              ref={photoUrl}
              placeholder='Your profile url..'
+             className='bg-gold py-4 px-12
+             placeholder:text-white
+             text-white rounded-lg outlined-none border-none font-medium'
              required
             />
         </label>
-        <button type='submit'>update</button>
+        <button type='submit'
+        className='mt-2 p-8 bg-gold'
+        >update</button>
      </form>
       </motion.div>
     </div>

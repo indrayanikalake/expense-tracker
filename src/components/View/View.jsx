@@ -1,16 +1,20 @@
-import React, { useRef , useState} from 'react'
+import React, { useRef , useState } from 'react'
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { fadeIn, slideIn } from '../../utils/motion';
 import { SectionWrapper } from '../../hoc';
 import { styles } from '../../styles';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const View = () => {
+    const navigate = useNavigate();
     const userName = useRef();
     const photoUrl = useRef();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
+   const idToken = localStorage.getItem('token')
+ 
 
     const handleSubmit =async (e) =>{
      e.preventDefault();
@@ -19,16 +23,21 @@ const View = () => {
      
      setLoading(true);
      try{
+       console.log('wait');
         const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDz2JJcOPvQ6aZWZ7JSkBxM2wuUziGzq80',{
+            idToken,    
             name,
             photo,
+          
             returnSecureToken:true,
         })
-        if(response.success === 200){
+        setLoading(false);
+        console.log(response);
+        if(response.status === 200){
             console.log('Done');
-            enteredEmail.current.value='';
-            enteredPassword.current.value='';
-            confirmPassword.current.value='';
+            userName.current.value='';
+            photoUrl.current.value='';
+           navigate('/profile');
         }
      }catch(error){
         console.log(error);

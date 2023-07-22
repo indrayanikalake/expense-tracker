@@ -1,13 +1,15 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { styles } from '../../styles';
 import { slideIn } from '../../utils/motion';
 import { SectionWrapper } from '../../hoc';
 import { useNavigate } from 'react-router-dom';
+import { Context } from '../Context/Context';
 
 const SignIn = () => {
     const navigate = useNavigate();
+    const { update } = useContext(Context);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
@@ -38,7 +40,11 @@ const SignIn = () => {
       setLoading(false);
       if (response.status === 200) {
        
-        console.log('User has successfully signed up');
+        console.log('User has successfully signed in');
+        console.log(response.data.idToken);
+        localStorage.setItem('token',response.data.idToken);
+        update(response.data.idToken);
+
         enteredEmail.current.value='';
         enteredPassword.current.value='';
         confirmPassword.current.value='';

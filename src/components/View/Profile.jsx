@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -10,15 +10,18 @@ const Profile = () =>{
  const [error, setError] = useState(false);
  const [sent, setSent] = useState(false);
  const navigate =useNavigate();
- const idToken = localStorage.getItem('token');
+
 
  const verifyEmail = async (e) =>{
-  e.preventDefault();
+  
   try{
+    console.log('wait');
+    const idToken = localStorage.getItem('token');
   const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDz2JJcOPvQ6aZWZ7JSkBxM2wuUziGzq80',{
-   requestType:"VERIFY_EMAIL",
-   idToken
+   requestType: "VERIFY_EMAIL",
+   idToken,
   })
+  console.log(response);
   if(response.status === 200){
     setSent(true);
     setVerified(!verified);
@@ -31,14 +34,15 @@ const Profile = () =>{
 
 
 return(
-<>
+<motion.div variants={fadeIn("left",'spring',0.5,1)}>
 <button
 onClick={verifyEmail}
 >verify</button>
 {sent &&( <motion.p 
-variants={fadeIn("right","string",0.2,1)}
-className='text-white text-center '>You will receive an verification code on your email</motion.p>)}
-</>
+
+className='text-white  '>You will receive an verification code on your email</motion.p>)}
+
+</motion.div>
 )
 }
 export default SectionWrapper(Profile, 'profile');

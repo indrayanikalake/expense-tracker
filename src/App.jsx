@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './App.css';
-import { ExpenseTracker, SignIn, SignUp } from './components';
+import { ExpenseTracker, SignIn, SignUp, View } from './components';
 
 function App() {
   return (
@@ -12,6 +12,7 @@ function App() {
           <Route exact path='/' element={<SignUp />} />
           <Route exact path='/signIn' element={<SignIn />} />
           <Route exact path='/signIn/Expense' element={<ExpenseTracker />} />
+          <Route exact path='/view' element={<View />} />
         </Routes>
       </div>
     </Router>

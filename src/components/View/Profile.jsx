@@ -9,7 +9,7 @@ const Profile = () =>{
  const [verified, setVerified] = useState(false);
  const [error, setError] = useState(false);
  const [sent, setSent] = useState(false);
- const navigate =useNavigate();
+ const navigate = useNavigate();
 
 
  const verifyEmail = async (e) =>{
@@ -32,9 +32,21 @@ const Profile = () =>{
 }
  }
 
+ const handleLogout = () =>{
+    localStorage.removeItem('token');
+    navigate('/signIn')
+   }
+  
 
 return(
+    <>
+    <div className='text-white text-end bg-purple-500'>
+      <button
+      onClick={handleLogout}>Logout</button>
+    </div>
+    
 <motion.div variants={fadeIn("left",'spring',0.5,1)}>
+
 <button
 onClick={verifyEmail}
 >verify</button>
@@ -43,6 +55,7 @@ onClick={verifyEmail}
 className='text-white  '>You will receive an verification code on your email</motion.p>)}
 
 </motion.div>
+</>
 )
 }
 export default SectionWrapper(Profile, 'profile');

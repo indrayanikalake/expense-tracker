@@ -4,7 +4,7 @@ import axios from 'axios';
 import { styles } from '../../styles';
 import { slideIn } from '../../utils/motion';
 import { SectionWrapper } from '../../hoc';
-import { useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { Context } from '../Context/Context';
 
 const SignIn = () => {
@@ -60,6 +60,10 @@ const SignIn = () => {
     
   };
 
+  const handleForgotPassword = ()=>{
+    navigate('/resetPassword')
+  }
+
   return (
     <div className='xl:mt-12 xl:flex-row flex-col-reverse flex gap-10 overflow-hidden'>
       <motion.div variants={slideIn('left', 'tween', 0.2, 1)} className='flex-[0.95] text-start bg-black-100 p-8 rounded-2xl'>
@@ -110,6 +114,8 @@ const SignIn = () => {
            required />
           </label>
           {error && <div className='text-red-500'>{error}</div>}
+          <button type='button' onClick={handleForgotPassword}
+          className='outline-none text-white text-center'>Forgot Password</button>
           <button type='submit' className='bg-tertiary py-3 px-8 outline-none shadow-md shadow-primary font-bold text-white rounded-xl'>
             {loading ? 'Sending...' : 'Send'}
           </button>

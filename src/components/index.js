@@ -2,7 +2,8 @@ export { default as SignUp } from './SignUp/SignUp';
 export { default as SignIn } from './SignIn/SignIn';
 export { default as ExpenseTracker } from './ExpenseTracker/ExpenseTracker';
 export { default as View } from './View/View';
-export { default as profile } from './View/Profile';
+export { default as Profile } from './View/Profile';
+export { default as ResetPassword } from './SignIn/ResetPassword';
 
 
 

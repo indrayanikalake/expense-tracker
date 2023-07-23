@@ -32,8 +32,8 @@ const ResetPassword = () => {
   return (
     <>
     {!sent && (
-    <form onSubmit={handleSubmit}>
-        <label>
+    <form className='flex flex-col items-center justify-center mt-20 p-8'>
+        <label className='flex flex-col items-center justify-center p-10'>
       <span className={`${styles.sectionSubText}`}>enter the email with which you have registered.</span>
        <input
        type='email'
@@ -42,7 +42,8 @@ const ResetPassword = () => {
        placeholder='enter your email...'
        required/>
       </label>
-      <button type='submit'>Send Link</button>
+      <button type='button' 
+      onClick={handleSubmit}>Send Link</button>
     </form>
     )}
     {sent && 

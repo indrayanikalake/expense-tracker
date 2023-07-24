@@ -7,6 +7,7 @@ import { ContextProvider } from './components/Context/Context';
 import Profile from './components/View/Profile';
 import { motion } from 'framer-motion';
 import {  fadeIn, slideIn } from './utils/motion';
+import Counter from './Redux/Counter';
 
 function App() {
 
@@ -24,7 +25,7 @@ function App() {
           <Route exact path='/view' element={<View />} />
           <Route exact path='/profile' element={<Profile />} />
           <Route exact path='/resetPassword' element={<ResetPassword />} />
-         
+          <Route exact path='/counter' element={<Counter />} /> 
         </Routes>
         
         </motion.div>

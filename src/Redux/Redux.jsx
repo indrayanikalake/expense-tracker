@@ -1,11 +1,10 @@
-const redux = require('redux');
- // Define the initial state
-const initialState = {
-    count: 0,
-  };
+import { createStore } from 'redux';
+
+
+
   
   // Reducer function
-  const counterReducer = (state = initialState, action) => {
+  const counterReducer = (state = { count: 0 }, action) => {
     switch (action.type) {
       case 'INCREMENT':
         return { ...state, count: state.count + 1 };
@@ -19,9 +18,9 @@ const initialState = {
         return state;
     }
   };
-  
+
   // Create a Redux store with the reducer
-  const store = Redux.createStore(counterReducer);
+  const store = createStore(counterReducer);
   
   // Subscribe to the store to get updates
   store.subscribe(() => {
@@ -37,3 +36,4 @@ const initialState = {
   store.dispatch({ type: 'DECREMENT' }); // Output: { count: 4 }
   store.dispatch({ type: 'DECREMENTBY2' }); // Output: { count: 2 }
   
+export default store;

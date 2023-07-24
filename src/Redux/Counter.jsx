@@ -2,12 +2,17 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { slideIn } from '../utils/motion';
 import { styles } from '../styles';
+
 import { useSelector, connect, useDispatch } from 'react-redux';
 
 
 const Counter = () => {
     const dispatch = useDispatch();
     const counter = useSelector(state=> state.count);
+
+    const increaseHandler = () =>{
+        dispatch({type:'INCREASE', amount:3});
+    }
 
     const increamentHandler = () =>{
         dispatch({type:'INCREMENTBY5'});
@@ -28,6 +33,7 @@ const Counter = () => {
       <h3 className='text-center text-white text-medium'>{counter}</h3>
       <div className='flex flex-row items-center justify-center space-x-4px'>
         <button type='button' onClick={increamentHandler}>Increament</button>
+        <button type='button' onClick={increaseHandler}>Increase</button>
         <button type='button' onClick={decreamentHandler}>Decreament</button>
       </div>
       <button type='button' onClick={toggleCounterHandler}>Toggle Counter</button>
@@ -35,5 +41,4 @@ const Counter = () => {
     </motion.div>
   )
 }
-
 export default Counter;

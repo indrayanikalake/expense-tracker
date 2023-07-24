@@ -8,6 +8,7 @@ import Profile from './components/View/Profile';
 import { motion } from 'framer-motion';
 import {  fadeIn, slideIn } from './utils/motion';
 import Counter from './Redux/Counter';
+import LogIn from './Redux/LogIn';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
           <Route exact path='/profile' element={<Profile />} />
           <Route exact path='/resetPassword' element={<ResetPassword />} />
           <Route exact path='/counter' element={<Counter />} /> 
+          <Route exact path='/counter1' element={<LogIn />} />
         </Routes>
         
         </motion.div>

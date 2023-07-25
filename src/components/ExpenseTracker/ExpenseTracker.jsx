@@ -6,6 +6,8 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setExpenses, addExpenses, deleteExpenses, editExpense } from '../../Redux/ExpenseSlice'
 import { toggleTheme } from '../../Redux/ThemeSlice';
+import { CSVLink } from 'react-csv';
+
 
 const ExpenseTracker = () => {
   const dispatch = useDispatch();
@@ -15,7 +17,17 @@ const ExpenseTracker = () => {
   const descriptionRef = useRef();
   const categoryRef = useRef();
   const [responseData, setRespnseData] = useState({});
-  
+   
+ 
+
+  const data = Object.values(expenses).map((expense)=>expense);
+  console.log(data);
+
+  const headers =[
+    {label: 'Description', key:'description' },
+    {label: 'Expense', key:'expense' },
+    {label: 'Category', key:'category' },
+  ];
 
   useEffect(() =>{
     fetchData();
@@ -97,6 +109,7 @@ const ExpenseTracker = () => {
 
   const handleThemeToggle = () => {
     dispatch(toggleTheme());
+    console.log(isLightMode);
   };
 
   return (
@@ -107,7 +120,7 @@ const ExpenseTracker = () => {
       </h1>
 
       <form onSubmit={handleSubmit} 
-       className={`${isLightMode? styles.lightMode : styles.darkMode} text-white`}>
+       className={`${isLightMode? `bg-primary` : `bg-white`} text-white`}>
         <h2 className={styles.heroHeadText}>Add Expense.</h2>
         <label>
           Expense:
@@ -167,6 +180,14 @@ const ExpenseTracker = () => {
       </button>
       {/* Other content... */}
     </div>
+    <div>
+      <CSVLink data={data} headers={headers} filename='expenseData.csv'>
+
+      <button >
+      Download
+      </button>
+      </CSVLink>
+      </div>
     </div>
   );
 };

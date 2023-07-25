@@ -15,9 +15,11 @@ function App() {
   return (
     <ContextProvider>
     <Router>
-    <motion.div className='relative z-0 bg-transparent bg-cover bg-no-repeat bg-center'
+    <motion.div
+     variants={slideIn("up", "tween", 0.1, 1)}
+     className='relative z-0 bg-transparent bg-cover bg-no-repeat bg-center'
       
-      variants={slideIn("up", "tween", 0.2, 1)}>
+     >
         <Routes>
         
           <Route exact path='/' element={<SignUp />} />

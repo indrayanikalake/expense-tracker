@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom';
 import { Context } from '../Context/Context';
 import { styles } from '../../styles';
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { setExpenses, addExpenses, deleteExpenses, editExpense } from '../../Redux/ExpenseSlice'
 
 const ExpenseTracker = () => {
-  const { addExpense, expenses } = useContext(Context);
+  const dispatch = useDispatch();
+  const expenses = useSelector((state) => state.expenses.expenses);
   const expenseRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
@@ -19,7 +22,7 @@ const ExpenseTracker = () => {
   const fetchData = async () =>{
     try{
     const getResponse = await axios.get('https://ecommerce-project-88866-default-rtdb.firebaseio.com/expense.json');
-    setRespnseData(getResponse.data);
+    dispatch(setExpenses(getResponse.data));
     console.log(Object.keys(getResponse.data).map((expense)=>expense));
     }catch(error){
       console.log(error);
@@ -38,7 +41,7 @@ const ExpenseTracker = () => {
       category,
     };
 
-    addExpense(newExpense);
+    dispatch(addExpenses(newExpense));
     try{
        const response = await axios.post('https://ecommerce-project-88866-default-rtdb.firebaseio.com/expense.json',
        newExpense
@@ -67,6 +70,7 @@ const ExpenseTracker = () => {
       description: descriptionRef.current.value,
       category: categoryRef.current.value,
     };
+    dispatch(editExpense({id : expenseId, updatedExpense}))
     try {
       await axios.put(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/expense/${expenseId}.json`, updatedExpense);
       fetchData();
@@ -76,6 +80,7 @@ const ExpenseTracker = () => {
   };
 
   const handleDelete = async (expenseId) => {
+    dispatch(deleteExpenses(expenseId));
     try {
       await axios.delete(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/expense/${expenseId}.json`);
       fetchData();
@@ -83,6 +88,8 @@ const ExpenseTracker = () => {
       console.log(error);
     }
   };
+
+  const totalExpense = expenses.reduce((total, expense) => total+ expense.expense, 0);
 
   return (
     <div>
@@ -137,6 +144,12 @@ const ExpenseTracker = () => {
           );
         })}
       </div>
+      <div>
+      {totalExpense > 10000 && (
+        <button className="premium-button">Activate Premium</button>
+      )}
+      {/* Your JSX code to display the expenses and form goes here */}
+    </div>
     </div>
   );
 };

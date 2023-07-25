@@ -56,7 +56,7 @@ const SignUp = () => {
   return (
     <div className='xl:mt-0 xl:flex-row  h-[480px] flex-col-reverse flex gap-5 '>
       <motion.div variants={slideIn('left', 'tween', 0.2, 1)} className='flex-[0.95] text-start  rounded-2xl'>
-        <p className={styles.sectionSubText}>Create a contact</p>
+        <p className={styles.sectionSubText}>Create an Account</p>
         <h3 className={styles.sectionHeadText}>Sign Up.</h3>
         <form onSubmit={handleSubmit} className='mt-2 flex flex-col gap-2'>
           <label className='flex flex-col '>
@@ -103,6 +103,10 @@ const SignUp = () => {
            required />
           </label>
           {error && <div className='text-red-500'>{error}</div>}
+          <p 
+          className=' text-center'>
+            <Link to='/signIn'
+            className={`${styles.sectionSubText}`}>Already have an account?</Link></p>
           <button type='submit' component={ Link } to='/signIn'
            className='black-gradient py-3 px-8 outline-none shadow-md shadow-primary font-bold text-white rounded-xl'>
             {loading ? 'Sending...' : 'Send'}

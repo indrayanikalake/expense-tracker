@@ -18,8 +18,12 @@
   background: linear-gradient(to left, rgb(14, 134, 36), rgb(11, 11, 11));
   
 }
-
-
+body.light-mode{
+  background: linear-gradient(to left, rgb(205, 232, 210), rgb(11, 11, 11));
+}
+body.dark-mode{
+  background: linear-gradient(to left, rgb(14, 134, 36), rgb(11, 11, 11));
+}
 .bg-transparent{
   background: transparent;
   backdrop-filter: blur(100px);

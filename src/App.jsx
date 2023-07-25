@@ -7,8 +7,8 @@ import { ContextProvider } from './components/Context/Context';
 import Profile from './components/View/Profile';
 import { motion } from 'framer-motion';
 import {  fadeIn, slideIn } from './utils/motion';
-import Counter from './Redux/Counter';
-import LogIn from './Redux/LogIn';
+
+
 
 function App() {
 
@@ -17,7 +17,7 @@ function App() {
     <Router>
     <motion.div
      variants={slideIn("up", "tween", 0.1, 1)}
-     className='relative z-0 bg-transparent bg-cover bg-no-repeat bg-center'
+     className={`relative z-0  bg-cover bg-no-repeat bg-center1`}
       
      >
         <Routes>
@@ -28,8 +28,8 @@ function App() {
           <Route exact path='/view' element={<View />} />
           <Route exact path='/profile' element={<Profile />} />
           <Route exact path='/resetPassword' element={<ResetPassword />} />
-          <Route exact path='/counter' element={<Counter />} /> 
-          <Route exact path='/counter1' element={<LogIn />} />
+          
+         
         </Routes>
         
         </motion.div>

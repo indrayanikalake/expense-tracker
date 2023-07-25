@@ -5,10 +5,12 @@ import { styles } from '../../styles';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setExpenses, addExpenses, deleteExpenses, editExpense } from '../../Redux/ExpenseSlice'
+import { toggleTheme } from '../../Redux/ThemeSlice';
 
 const ExpenseTracker = () => {
   const dispatch = useDispatch();
   const expenses = useSelector((state) => state.expenses.expenses);
+  const isLightMode = useSelector((state) =>state.theme.lightMode);
   const expenseRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
@@ -24,6 +26,7 @@ const ExpenseTracker = () => {
     const getResponse = await axios.get('https://ecommerce-project-88866-default-rtdb.firebaseio.com/expense.json');
     dispatch(setExpenses(getResponse.data));
     console.log(Object.keys(getResponse.data).map((expense)=>expense));
+    console.log(expenses);
     }catch(error){
       console.log(error);
     }
@@ -89,7 +92,12 @@ const ExpenseTracker = () => {
     }
   };
 
-  const totalExpense = expenses.reduce((total, expense) => total+ expense.expense, 0);
+  const expenseArray = Object.values(expenses);
+  const totalExpense = expenseArray.reduce((total, expense) => total+ expense.expense, 0);
+
+  const handleThemeToggle = () => {
+    dispatch(toggleTheme());
+  };
 
   return (
     <div>
@@ -98,7 +106,8 @@ const ExpenseTracker = () => {
         Your Profile is incomplete, <Link to='/view'>Complete now</Link>
       </h1>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} 
+       className={`${isLightMode? styles.lightMode : styles.darkMode} text-white`}>
         <h2 className={styles.heroHeadText}>Add Expense.</h2>
         <label>
           Expense:
@@ -121,8 +130,8 @@ const ExpenseTracker = () => {
 
       <div>
         <h2 className={`${styles.heroSubText} text-start mt-12`}>Expenses:</h2>
-        {Object.keys(responseData).map((expenseId) => {
-          const expense = responseData[expenseId];
+        {Object.keys(expenses).map((expenseId) => {
+          const expense = expenses[expenseId];
           return (
             <ul key={expenseId} className='flex flex-row p-2 text-white space-x-4 items-center justify-center'>
               <li>{expense.description}</li>
@@ -143,12 +152,20 @@ const ExpenseTracker = () => {
             </ul>
           );
         })}
-      </div>
+        </div>
       <div>
       {totalExpense > 10000 && (
         <button className="premium-button">Activate Premium</button>
       )}
-      {/* Your JSX code to display the expenses and form goes here */}
+      
+    </div>
+    
+    <div>
+      {/* Other content... */}
+      <button onClick={handleThemeToggle}>
+       Theme Change
+      </button>
+      {/* Other content... */}
     </div>
     </div>
   );

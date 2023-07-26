@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Grid, Typography, Card } from '@material-ui/core';
 import { useDispatch , useSelector } from 'react-redux';
 import { increase, remove, decrease } from '../Redux/CartStatus';
@@ -8,7 +8,19 @@ const Cart = () => {
     const dispatch = useDispatch();
     const items = useSelector((state) => state.cartStatus.items);
     console.log(items.map((item)=>item.newItem));
-
+    const [sending, setSending] = useState(false);
+   useEffect (()=>{
+    setSending(true);
+    try{
+        axios.post('https://ecommerce-project-88866-default-rtdb.firebaseio.com/cart.json',
+        items)
+        setSending(false);
+        
+    }catch(error){
+        console.log(error);
+    }
+   },[items]);
+   if(sending)return <p>sending</p>
    
 
   return (

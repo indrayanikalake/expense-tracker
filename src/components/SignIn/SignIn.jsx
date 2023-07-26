@@ -65,11 +65,10 @@ const SignIn = () => {
   }
 
   return (
-    <div className='xl:mt-12 xl:flex-row flex-col-reverse flex gap-10 overflow-hidden'>
-      <motion.div variants={slideIn('left', 'tween', 0.2, 1)} className='flex-[0.95] text-start bg-black-100 p-8 rounded-2xl'>
-        <p className={styles.sectionSubText}>Get in touch</p>
-        <h3 className={styles.sectionHeadText}>Contact.</h3>
-        <form onSubmit={handleSubmit} className='mt-12 flex flex-col gap-8'>
+    <div className='xl:mt-0 xl:flex-row flex-col-reverse flex gap-1 overflow-hidden'>
+      <motion.div variants={slideIn('left', 'tween', 0.2, 1)} className='flex-[0.95] text-start bg-black-100 p-1 rounded-2xl'>
+        <h3 className={styles.sectionHeadText}>Sign In</h3>
+        <form onSubmit={handleSubmit} className='mt-1 flex flex-col gap-2'>
           <label className='flex flex-col '>
             <span className='text-white  font-medium mb-4'>
               Email
@@ -79,7 +78,7 @@ const SignIn = () => {
               name='email'
               ref={enteredEmail}
               placeholder='your name please...'
-              className='bg-tertiary py-4 px-6
+              className='bg-transparent py-4 px-6
               placeholder:text-secondary
               text-white rounded-lg outlined-none border-none font-medium'
               required
@@ -94,7 +93,7 @@ const SignIn = () => {
               name='password'
               ref={enteredPassword}
               placeholder='your email please...'
-              className='bg-tertiary py-4 px-6
+              className='bg-transparent py-4 px-6
               placeholder:text-secondary
               text-white rounded-lg outlined-none border-none font-medium'
              required/>
@@ -108,7 +107,7 @@ const SignIn = () => {
               name='confirmPassword'
               ref={confirmPassword}
               placeholder='Confirm your password...'
-              className='bg-tertiary py-4 px-6
+              className='bg-transparent py-4 px-6
               placeholder:text-secondary
               text-white rounded-lg outlined-none border-none font-medium'
            required />

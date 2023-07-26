@@ -32,9 +32,9 @@ const ResetPassword = () => {
   return (
     <>
     {!sent && (
-    <form className='flex flex-col items-center justify-center mt-20 p-8'>
+    <form className='flex flex-col items-center justify-center mt-20 p-8 '>
         <label className='flex flex-col items-center justify-center p-10'>
-      <span className={`${styles.sectionSubText}`}>enter the email with which you have registered.</span>
+      <span className={`${styles.sectionSubText} text-white`}>enter the email with which you have registered.</span>
        <input
        type='email'
        name='email'
@@ -42,7 +42,7 @@ const ResetPassword = () => {
        placeholder='enter your email...'
        required/>
       </label>
-      <button type='button' 
+      <button type='button' className='bg-black text-white ' 
       onClick={handleSubmit}>Send Link</button>
     </form>
     )}

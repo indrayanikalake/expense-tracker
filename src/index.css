@@ -15,7 +15,7 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
   scroll-behavior: smooth;
-  background: linear-gradient(to left, rgb(14, 134, 36), rgb(11, 11, 11));
+  background: linear-gradient(to left,rgb(99, 53, 105),  rgb(11, 11, 11));
   
 }
 body.light-mode{
@@ -36,7 +36,7 @@ body.dark-mode{
 .text-gold{
   color: #DCCA87;
   font-family: 'Cormorant Upright', serif;
- 
+  font-size: 2em;
   letter-spacing: 0.04em;
   text-transform: capitalize;
 }
@@ -112,7 +112,11 @@ body.dark-mode{
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
+.b-corner{
+  position: absolute;
+   top: 100px; 
+   right: 10px;
+}
 .blue-text-gradient {
   /* background: -webkit-linear-gradient(#eee, #333); */
   background: #56ccf2; /* fallback for old browsers */
@@ -146,6 +150,11 @@ body.dark-mode{
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.green-pink-gradient {
+  background: "#00cea8";
+  background: linear-gradient(90.13deg, #00cea8 1.9%, #bf61ff 97.5%);
+  background: -webkit-linear-gradient(-90.13deg, #00cea8 1.9%, #bf61ff 97.5%);
 }
 
 /* canvas- styles */

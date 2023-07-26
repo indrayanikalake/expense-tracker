@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Tilt } from 'react-tilt';
 import { Context } from '../Context/Context';
 import { styles } from '../../styles';
 import axios from 'axios';
@@ -7,17 +8,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setExpenses, addExpenses, deleteExpenses, editExpense } from '../../Redux/ExpenseSlice'
 import { toggleTheme } from '../../Redux/ThemeSlice';
 import { CSVLink } from 'react-csv';
+import { toggleCartVisibility } from '../../Redux/CartSlice';
+import { Card, Typography } from '@material-ui/core';
 
 
 const ExpenseTracker = () => {
   const dispatch = useDispatch();
   const expenses = useSelector((state) => state.expenses.expenses);
   const isLightMode = useSelector((state) =>state.theme.lightMode);
+  const isVisible = useSelector((state) =>state.cart.isVisible)
   const expenseRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
-  const [responseData, setRespnseData] = useState({});
-   
+ 
+   const [dowload,setDownload] = useState(false);
  
 
   const data = Object.values(expenses).map((expense)=>expense);
@@ -109,40 +113,142 @@ const ExpenseTracker = () => {
 
   const handleThemeToggle = () => {
     dispatch(toggleTheme());
+    setDownload(true);
     console.log(isLightMode);
   };
 
   return (
-    <div>
-      <h1 className='text-white text-start'>Welcome to ExpenseTracker!</h1>
+    <div className={`${isLightMode} 'bg-transparent':'black-gradient'`}>
+      <div >
+      <button className='text-white'
+      style={{position:'absolute', top:'10px', left:'5px'}}
+      onClick={()=>dispatch(toggleCartVisibility())}>
+        Cart
+      </button>
+      {isVisible && (
+        
+          <Card className='w-[250px] h-full'>
+            <Typography>Expense</Typography>
+            <Link to='/signIn'>Sign Out</Link>
+          </Card>
+        
+      )}
+      </div>
+      <h1 className={`font-bold text-white text-start`}>Welcome to ExpenseTracker!</h1>
       <h1 className='text-white text-end'>
         Your Profile is incomplete, <Link to='/view'>Complete now</Link>
       </h1>
-
+      
+      <Tilt
+       options={{
+        max:45,
+        scale:1,
+        speed:450
+      }}
+      className='green-pink-gradient flex flex-row gap-12 p-5 rounded-2xl sm:w-[750px] rounded-[10px] w-[5px] h-[150px]'
+      style={{
+        background: 'linear-gradient(to bottom, violet, pink)'
+      }}>
+        
+        <Tilt
+       options={{
+        max:45,
+        scale:1,
+        speed:450
+      }}
+      className='  p-5 rounded-2xl sm:w-[100px] rounded-full w-[5px] h-[100px]'
+      style={{
+        background: 'linear-gradient(to left, green, magenta)',
+        borderLeft:'10px solid black'
+      }}> 
+      <p className='text-white text-center font-bold'>Food</p>
+      </Tilt>
+        
+        <Tilt
+       options={{
+        max:45,
+        scale:1,
+        speed:450
+      }}
+      className='bg-tertiery  p-5 rounded-2xl sm:w-[100px] rounded-full w-[5px] h-[100px]'
+      style={{
+        background: 'linear-gradient(to left, gold, magenta)',
+        borderLeft:'10px solid black'
+      }}> 
+      <p className='text-white'>Fashion</p>
+      </Tilt>
+       <Tilt
+       options={{
+        max:45,
+        scale:1,
+        speed:450
+      }}
+      className='bg-tertiery  p-5 rounded-2xl sm:w-[100px] rounded-full w-[5px] h-[100px]'
+      style={{
+        background: 'linear-gradient(to left, black, magenta)',
+        borderLeft:'10px solid black'
+      }}> 
+      <p className='text-white text-center '>Oil</p>
+      </Tilt>
+      
+       <Tilt
+       options={{
+        max:45,
+        scale:1,
+        speed:450
+      }}
+      className='bg-tertiery  p-5 rounded-2xl sm:w-[100px] rounded-full w-[5px] h-[100px]'
+      style={{
+        background: 'linear-gradient(to left, gray, green)',
+        borderLeft:'10px solid black'
+      }}> 
+      <p className='text-white'>Travel</p>
+      </Tilt>
+       <Tilt
+       options={{
+        max:45,
+        scale:1,
+        speed:450
+      }}
+      className='bg-tertiery  p-5 rounded-2xl sm:w-[100px] rounded-full w-[5px] h-[100px]'
+      style={{
+        background: 'linear-gradient(to left, green, gold)',
+        borderLeft:'10px solid black'
+      }}> 
+      <p className='text-white'>Health</p>
+      </Tilt>
+      </Tilt>
+      
       <form onSubmit={handleSubmit} 
-       className={`${isLightMode? `bg-primary` : `bg-white`} text-white`}>
-        <h2 className={styles.heroHeadText}>Add Expense.</h2>
-        <label>
+       className={`${isLightMode? 'bg-transparent' : 'bg-white'} text-white flex flex-col  p-8 b-corner sm:absolute`}
+       >
+        <h2 className={`${styles.heroSubText} text-start text-white`}>Add Expense.</h2>
+        <label className='flex flex-col text-start mt-2'>
           Expense:
-          <input type='number' step='0.01' ref={expenseRef} required />
+          <input
+          className='mt-2 bg-transparent'
+          type='number' step='0.01' ref={expenseRef} required />
         </label>
-        <label>
+        <label className='flex flex-col text-start mt-2' >
           Description:
-          <input type='text' ref={descriptionRef} required />
+          <input type='text' ref={descriptionRef} 
+            className='mt-2 p-8 bg-transparent' required />
         </label>
-        <label>
+        <label className='flex flex-col text-start mt-2'>
           Category:
-          <select ref={categoryRef} required>
+          <select 
+            className='mt-2 bg-transparent bg-black' ref={categoryRef} required>
             <option value='Food'>Food</option>
             <option value='Petrol'>Petrol</option>
             <option value='Salary'>Salary</option>
           </select>
         </label>
-        <button type='submit'>Add Expense</button>
+        <button type='submit'
+        className='flex flex-col  mt-2 black-gradient rounded-[10px] w-[100px] text-center'>Add Expense</button>
       </form>
 
-      <div>
-        <h2 className={`${styles.heroSubText} text-start mt-12`}>Expenses:</h2>
+      <div className='bg-corner bottom-0 left-100'>
+        <h2 className={`${styles.heroSubText} text-center mt-20`}>Expenses:</h2>
         {Object.keys(expenses).map((expenseId) => {
           const expense = expenses[expenseId];
           return (
@@ -151,6 +257,7 @@ const ExpenseTracker = () => {
               <li>${expense.expense}</li>
               <li>{expense.category}</li>
               <button
+              className='green-text-gradient '
                 type='button'
                 onClick={() => {
                 
@@ -159,7 +266,8 @@ const ExpenseTracker = () => {
               >
                 Edit
               </button>
-              <button type='button' onClick={() => handleDelete(expenseId)}>
+              <button className='rounded orange-text-gradient'
+              type='button' onClick={() => handleDelete(expenseId)}>
                 Delete
               </button>
             </ul>
@@ -168,18 +276,12 @@ const ExpenseTracker = () => {
         </div>
       <div>
       {totalExpense > 10000 && (
-        <button className="premium-button">Activate Premium</button>
+        <button className="premium-button" onClick={handleThemeToggle}>Activate Premium</button>
       )}
       
-    </div>
     
-    <div>
-      {/* Other content... */}
-      <button onClick={handleThemeToggle}>
-       Theme Change
-      </button>
-      {/* Other content... */}
-    </div>
+    
+    {dowload && (
     <div>
       <CSVLink data={data} headers={headers} filename='expenseData.csv'>
 
@@ -188,6 +290,8 @@ const ExpenseTracker = () => {
       </button>
       </CSVLink>
       </div>
+      )}
+    </div>
     </div>
   );
 };

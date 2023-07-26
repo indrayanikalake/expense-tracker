@@ -15,24 +15,24 @@ function App() {
   return (
     <ContextProvider>
     <Router>
-    <motion.div
-     variants={slideIn("up", "tween", 0.1, 1)}
-     className={`relative z-0  bg-cover bg-no-repeat bg-center1`}
-      
-     >
+    <div className={`relative z-0  bg-cover bg-no-repeat bg-center1`}>
         <Routes>
         
+      
+     
           <Route exact path='/' element={<SignUp />} />
+          
           <Route exact path='/signIn' element={<SignIn />} />
           <Route exact path='/signIn/Expense' element={<ExpenseTracker />} />
           <Route exact path='/view' element={<View />} />
           <Route exact path='/profile' element={<Profile />} />
           <Route exact path='/resetPassword' element={<ResetPassword />} />
           
-         
-        </Routes>
+          
+       
         
-        </motion.div>
+        </Routes>
+        </div>
     </Router>
     </ContextProvider>
   );

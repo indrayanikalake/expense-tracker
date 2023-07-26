@@ -17,11 +17,24 @@ import { createSlice } from '@reduxjs/toolkit';
         },
         remove(state,action){
             const id = action.payload;
-            state.items = state.items.filter((item) => item.id !== id);
+            state.items = state.items.filter((item) => item.newItem.id !== id);
+            console.log(state.items);
+        },
+        increase(state, action){
+            const id = action.payload;
+            const item = state.items.find((item) => item.newItem.id === id);
+            item.newItem.quantity++;
+        },
+        decrease(state, action){
+            const id = action.payload;
+            const item = state.items.find((item) => item.newItem.id === id);
+            item.newItem.quantity--;
+            if(item.newItem.quantity === 0) state.items = state.items.filter((item) => item.newItem.id !== id);
+            
         }
     }
  })
 
- export const { add , remove } = cartStatus.actions;
+ export const { add , remove, increase ,decrease } = cartStatus.actions;
  const cartStatusReducer = cartStatus.reducer;
  export default cartStatusReducer;

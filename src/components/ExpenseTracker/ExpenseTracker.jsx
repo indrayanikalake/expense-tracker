@@ -118,34 +118,37 @@ const ExpenseTracker = () => {
   };
 
   return (
-    <div className={`${isLightMode} 'bg-transparent':'black-gradient'`}>
-      <div >
+    <div className={`${isLightMode} 'bg-transparent':'black-gradient' `}>
+      <div className='flex flex-col ' >
       <button className='text-white'
-      style={{position:'absolute', top:'10px', left:'5px'}}
+      style={{position:'fixed', top:'15px', left:'5px'}}
       onClick={()=>dispatch(toggleCartVisibility())}>
         Cart
       </button>
       {isVisible && (
         
-          <Card className='w-[250px] h-full'>
-            <Typography>Expense</Typography>
-            <Link to='/signIn'>Sign Out</Link>
+          <Card className='w-[220px] lg:h-[600px] mx-2 my-12 p-12 text-start '
+          style={{boxShadow:'10px 10px 10px rgb(250, 251, 249)'}}>
+            <Typography 
+            className='text-white text-start  '>Expense</Typography>
+            <Link to='/signIn' 
+            className='text-white violet-gradient'>Sign Out</Link>
           </Card>
         
       )}
-      </div>
-      <h1 className={`font-bold text-white text-start`}>Welcome to ExpenseTracker!</h1>
-      <h1 className='text-white text-end'>
+      
+      <h1 className={`font-bold text-white text-start fixed`}>Welcome to ExpenseTracker!</h1>
+      <h1 className=' fixed text-white text-end'>
         Your Profile is incomplete, <Link to='/view'>Complete now</Link>
       </h1>
-      
+      </div>
       <Tilt
        options={{
         max:45,
         scale:1,
         speed:450
       }}
-      className='green-pink-gradient flex flex-row gap-12 p-5 rounded-2xl sm:w-[750px] rounded-[10px] w-[5px] h-[150px]'
+      className=' mt-12  green-pink-gradient flex flex-row gap-12 p-5 rounded-2xl sm:w-[750px] rounded-[10px] w-[5px] h-[150px]'
       style={{
         background: 'linear-gradient(to bottom, violet, pink)'
       }}>

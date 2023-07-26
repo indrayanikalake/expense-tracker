@@ -5,6 +5,7 @@ import expenseReducer from './ExpenseSlice';
 import authReducer from './AuthSlice';
 import themeReducer from './ThemeSlice';
 import cartReducer from './CartSlice';
+import cartStatusReducer from './CartStatus';
 
 
 const store = configureStore({
@@ -12,7 +13,8 @@ const store = configureStore({
     auth: authReducer,
     expenses: expenseReducer,
     theme: themeReducer,
-    cart:cartReducer
+    cart:cartReducer,
+    cartStatus: cartStatusReducer,
   },
 });
 

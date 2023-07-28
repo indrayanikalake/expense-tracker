@@ -10,16 +10,46 @@ const Cart = () => {
     console.log(items.map((item)=>item.newItem));
     const [sending, setSending] = useState(false);
    useEffect (()=>{
+    const sendCartdata = async ()=>{
     setSending(true);
     try{
-        axios.post('https://ecommerce-project-88866-default-rtdb.firebaseio.com/cart.json',
+        const response = await axios.post('https://ecommerce-project-88866-default-rtdb.firebaseio.com/cart.json',
         items)
         setSending(false);
-        
+        if(response.status === 200){
+            console.log('successful');
+        }
     }catch(error){
         console.log(error);
     }
+    }
    },[items]);
+   useEffect(() => {
+    // Make the GET request to retrieve cart data
+    const fetchCartData = async () => {
+      setSending(true);
+      try {
+        const response = await axios.get(
+          'https://ecommerce-project-88866-default-rtdb.firebaseio.com/cart.json'
+        );
+        if (response.status === 200) {
+          const data = response.data;
+          if (data) {
+            // Populate Redux store with the retrieved data
+            dispatch(setCartData(data));
+          }
+        }
+        setLoading(false);
+      } catch (error) {
+        setError('Error retrieving cart data');
+        setLoading(false);
+      }
+      setSending(false);
+    };
+
+    fetchCartData();
+  }, [dispatch]);
+
    if(sending)return <p>sending</p>
    
 

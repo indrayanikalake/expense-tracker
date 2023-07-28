@@ -15,8 +15,36 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
   scroll-behavior: smooth;
-  background: linear-gradient(to left,rgb(99, 53, 105),  rgb(11, 11, 11));
-  
+  background: linear-gradient(to left,rgb(41, 1, 53),  rgb(17, 17, 17));
+ 
+}
+
+video{
+
+  width:100%;
+      height: 90vh;  
+     
+      object-fit: cover;
+  }
+.slidesOverlay{
+  object-fit: cover;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  inset: 0;
+  background: rgba(43, 2, 47, 0.5);
+ 
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.bg-black{
+  background:rgb(11, 11, 11)
+}
+.bg-white{
+  background-color: #ec008c;
 }
 body.light-mode{
   background: linear-gradient(to left, rgb(205, 232, 210), rgb(11, 11, 11));
@@ -114,8 +142,8 @@ body.dark-mode{
 }
 .b-corner{
   position: absolute;
-   top: 100px; 
-   right: 10px;
+   top: 125px; 
+   right: 15px;
 }
 .blue-text-gradient {
   /* background: -webkit-linear-gradient(#eee, #333); */

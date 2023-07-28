@@ -47,7 +47,7 @@ const ResetPassword = () => {
     </form>
     )}
     {sent && 
-    <p> Thank You We've successfuly sent Verification E-mail , click on link and set your new password</p>}
+    <p className='text-white text-center'> Thank You We've successfuly sent Verification E-mail , click on link and set your new password</p>}
     {error && <p>{error}</p>}
     </>
   )

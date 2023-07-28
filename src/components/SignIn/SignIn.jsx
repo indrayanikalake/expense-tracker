@@ -4,7 +4,7 @@ import axios from 'axios';
 import { styles } from '../../styles';
 import { slideIn } from '../../utils/motion';
 import { SectionWrapper } from '../../hoc';
-import {  useNavigate } from 'react-router-dom';
+import {  Link, useNavigate } from 'react-router-dom';
 import { Context } from '../Context/Context';
 
 const SignIn = () => {
@@ -39,10 +39,11 @@ const SignIn = () => {
       });
       setLoading(false);
       if (response.status === 200) {
-       
+        console.log(response.data);
         console.log('User has successfully signed in');
         console.log(response.data.idToken);
         localStorage.setItem('token',response.data.idToken);
+        localStorage.setItem('email', response.data.email);
         update(response.data.idToken);
 
         enteredEmail.current.value='';
@@ -67,6 +68,7 @@ const SignIn = () => {
   return (
     <div className='xl:mt-0 xl:flex-row flex-col-reverse flex gap-1 overflow-hidden'>
       <motion.div variants={slideIn('left', 'tween', 0.2, 1)} className='flex-[0.95] text-start bg-black-100 p-1 rounded-2xl'>
+        <Link to='/signUp' className={`${styles.sectionSubText}`}>Create an Account</Link>
         <h3 className={styles.sectionHeadText}>Sign In</h3>
         <form onSubmit={handleSubmit} className='mt-1 flex flex-col gap-2'>
           <label className='flex flex-col '>

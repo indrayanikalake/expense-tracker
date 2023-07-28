@@ -8,20 +8,24 @@ import Profile from './components/View/Profile';
 import { motion } from 'framer-motion';
 import {  fadeIn, slideIn } from './utils/motion';
 import Shoppingcart from './ShoppingCart/Shoppingcart';
+import Home from './Home/Home';
 
 
 
 function App() {
 
+  
+  
+
   return (
     <ContextProvider>
     <Router>
-    <div className={`relative z-0  bg-cover bg-no-repeat bg-center1`}>
+    <div >
         <Routes>
         
       
-     
-          <Route exact path='/' element={<SignUp />} />
+          <Route exact path='/' element={<Home />} />
+          <Route exact path='/signUp' element={<SignUp />} />
           
           <Route exact path='/signIn' element={<SignIn />} />
           <Route exact path='/signIn/Expense' element={<ExpenseTracker />} />

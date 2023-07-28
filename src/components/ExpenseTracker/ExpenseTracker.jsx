@@ -10,6 +10,10 @@ import { toggleTheme } from '../../Redux/ThemeSlice';
 import { CSVLink } from 'react-csv';
 import { toggleCartVisibility } from '../../Redux/CartSlice';
 import { Card, Typography } from '@material-ui/core';
+import Graph from './Graph';
+import { motion } from 'framer-motion';
+import { SectionWrapper } from '../../hoc';
+import { fadeIn } from '../../utils/motion';
 
 
 const ExpenseTracker = () => {
@@ -20,9 +24,17 @@ const ExpenseTracker = () => {
   const expenseRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
+  const dateRef = useRef();
+  const incomeRef = useRef(null);
+  const [income, setIncome] = useState(0);
+  const email = localStorage.getItem('email')?.replace('@','').replace('.','');
+  
  
    const [dowload,setDownload] = useState(false);
- 
+   const incomeValue = incomeRef.current? incomeRef.current.value :0;
+  console.log(incomeValue);
+
+ console.log(expenses);
 
   const data = Object.values(expenses).map((expense)=>expense);
   console.log(data);
@@ -39,7 +51,11 @@ const ExpenseTracker = () => {
 
   const fetchData = async () =>{
     try{
-    const getResponse = await axios.get('https://ecommerce-project-88866-default-rtdb.firebaseio.com/expense.json');
+    const getResponse = await axios.get(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/${email}.json`);
+    console.log(getResponse);
+    if(getResponse.data === null){
+      getResponse.data = {};
+    }
     dispatch(setExpenses(getResponse.data));
     console.log(Object.keys(getResponse.data).map((expense)=>expense));
     console.log(expenses);
@@ -53,16 +69,18 @@ const ExpenseTracker = () => {
     const expense = expenseRef.current.value;
     const description = descriptionRef.current.value;
     const category = categoryRef.current.value;
+    const date = dateRef.current.value;
 
     const newExpense = {
       expense: parseFloat(expense),
       description,
       category,
+      date,
     };
 
     dispatch(addExpenses(newExpense));
     try{
-       const response = await axios.post('https://ecommerce-project-88866-default-rtdb.firebaseio.com/expense.json',
+       const response = await axios.post(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/${email}.json`,
        newExpense
        )
        console.log(response);
@@ -76,6 +94,7 @@ const ExpenseTracker = () => {
     expenseRef.current.value = '';
     descriptionRef.current.value = '';
     categoryRef.current.value = '';
+    dateRef.current.value='';
     console.log(expenses);
 
   
@@ -91,7 +110,7 @@ const ExpenseTracker = () => {
     };
     dispatch(editExpense({id : expenseId, updatedExpense}))
     try {
-      await axios.put(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/expense/${expenseId}.json`, updatedExpense);
+      await axios.put(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/${email}/${expenseId}.json`, updatedExpense);
       fetchData();
     } catch (error) {
       console.log(error);
@@ -101,7 +120,7 @@ const ExpenseTracker = () => {
   const handleDelete = async (expenseId) => {
     dispatch(deleteExpenses(expenseId));
     try {
-      await axios.delete(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/expense/${expenseId}.json`);
+      await axios.delete(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/${email}/${expenseId}.json`);
       fetchData();
     } catch (error) {
       console.log(error);
@@ -117,11 +136,36 @@ const ExpenseTracker = () => {
     console.log(isLightMode);
   };
 
+  const categories = Object.values(expenses).map((expense)=>expense.category);
+    console.log(categories);
+
+    const categoryCount = categories.reduce((counts, category) =>{
+    counts[category]= (counts[category] || 0)+1;
+    return counts},{});
+    console.log(categoryCount);
+
+  const totalExpenses = Object.values(expenses).reduce((total, expense)=>
+  total+ expense.expense , 0);
+  console.log(totalExpense);
+
+  const balance = income-totalExpense;
+
+  const percentageData = Object.keys(categoryCount).map((category) => {
+    const percentage = ((100/(categories.length))*categoryCount[category] ).toFixed(1);
+    return { category, percentage };
+  });
+  console.log(percentageData);
+
+  const getCategoryPercentage = (category) => {
+    const categoryData = percentageData.find((item) => item.category === category);
+    return categoryData ? parseFloat(categoryData.percentage) : 0;
+  };
+
   return (
-    <div className={`${isLightMode} 'bg-transparent':'black-gradient' `}>
+    <div className={`${isLightMode? 'bg-black' : 'bg-white'}`}>
       <div className='flex flex-col ' >
       <button className='text-white'
-      style={{position:'fixed', top:'15px', left:'5px'}}
+      style={{position:'absolute', top:'15px', left:'5px'}}
       onClick={()=>dispatch(toggleCartVisibility())}>
         Cart
       </button>
@@ -138,19 +182,39 @@ const ExpenseTracker = () => {
       )}
       
       <h1 className={`font-bold text-white text-start fixed`}>Welcome to ExpenseTracker!</h1>
-      <h1 className=' fixed text-white text-end'>
+      <h1 className='  text-white text-end'>
         Your Profile is incomplete, <Link to='/view'>Complete now</Link>
       </h1>
+      <div className='flex flex-row'>
+      {totalExpense > 10000 && (
+        <button className="text-white w-[200px]"
+        style={{ background: 'linear-gradient(to up,rgb(39, 2, 2),  rgb(244, 223, 223))'}}
+         onClick={handleThemeToggle}>Activate Premium</button>
+      )}
+       {dowload && (
+    <div>
+      <CSVLink data={data} headers={headers} filename='expenseData.csv'>
+
+      <button className='text-white'>
+      Download
+      </button>
+      </CSVLink>
       </div>
+      )}
+      </div>
+      </div>
+      <motion.div
+      variants={fadeIn("down","tween",0.2,1)}>
       <Tilt
        options={{
         max:45,
         scale:1,
         speed:450
       }}
-      className=' mt-12  green-pink-gradient flex flex-row gap-12 p-5 rounded-2xl sm:w-[750px] rounded-[10px] w-[5px] h-[150px]'
+      className=' mt-12   flex flex-row gap-12 p-5  sm:w-[750px] rounded-[10px] h-[150px]'
       style={{
-        background: 'linear-gradient(to bottom, violet, pink)'
+        background: 'linear-gradient(to bottom, violet, pink)',
+        overflow:'hidden'
       }}>
         
         <Tilt
@@ -165,6 +229,7 @@ const ExpenseTracker = () => {
         borderLeft:'10px solid black'
       }}> 
       <p className='text-white text-center font-bold'>Food</p>
+      <p className='text-white'>{getCategoryPercentage('Food').toFixed(1)}%</p>
       </Tilt>
         
         <Tilt
@@ -179,6 +244,7 @@ const ExpenseTracker = () => {
         borderLeft:'10px solid black'
       }}> 
       <p className='text-white'>Fashion</p>
+      <p className='text-white'>{getCategoryPercentage('Fashion').toFixed(1)}%</p>
       </Tilt>
        <Tilt
        options={{
@@ -191,7 +257,8 @@ const ExpenseTracker = () => {
         background: 'linear-gradient(to left, black, magenta)',
         borderLeft:'10px solid black'
       }}> 
-      <p className='text-white text-center '>Oil</p>
+      <p className='text-white text-center '>Salary</p>
+      <p className='text-white'>{getCategoryPercentage('Salary').toFixed(1)}%</p>
       </Tilt>
       
        <Tilt
@@ -206,6 +273,7 @@ const ExpenseTracker = () => {
         borderLeft:'10px solid black'
       }}> 
       <p className='text-white'>Travel</p>
+      <p className='text-white'>{getCategoryPercentage('Travel').toFixed(1)}%</p>
       </Tilt>
        <Tilt
        options={{
@@ -219,13 +287,20 @@ const ExpenseTracker = () => {
         borderLeft:'10px solid black'
       }}> 
       <p className='text-white'>Health</p>
+      <p className='text-white'>{getCategoryPercentage('Health').toFixed(1)}%</p>
       </Tilt>
       </Tilt>
+      </motion.div>
+      <motion.div 
+      variants={fadeIn("up","tween",0.2,1)}
+      style={{margin :'2.1rem 0', height:'2vh'}} >
+       <Graph />
+      </motion.div>
       
       <form onSubmit={handleSubmit} 
-       className={`${isLightMode? 'bg-transparent' : 'bg-white'} text-white flex flex-col  p-8 b-corner sm:absolute`}
+       className=' text-white flex flex-col w-[420px] h-[540px] p-10 b-corner bg-transparent sm:absolute'
        >
-        <h2 className={`${styles.heroSubText} text-start text-white`}>Add Expense.</h2>
+        <h2 className={`${styles.heroSubText} text-start text-white font-bold`}>Add Expense.</h2>
         <label className='flex flex-col text-start mt-2'>
           Expense:
           <input
@@ -237,28 +312,56 @@ const ExpenseTracker = () => {
           <input type='text' ref={descriptionRef} 
             className='mt-2 p-8 bg-transparent' required />
         </label>
+        <label className="flex flex-col text-start mt-2">
+        Date:
+        <input type="date" ref={dateRef} className='bg-transparent' required />
+      </label>
         <label className='flex flex-col text-start mt-2'>
           Category:
           <select 
             className='mt-2 bg-transparent bg-black' ref={categoryRef} required>
             <option value='Food'>Food</option>
-            <option value='Petrol'>Petrol</option>
+            <option value='Fashion'>Fashion</option>
             <option value='Salary'>Salary</option>
+            <option value='Travel'>Travel</option>
+            <option value='Health'>Health</option>
           </select>
         </label>
         <button type='submit'
         className='flex flex-col  mt-2 black-gradient rounded-[10px] w-[100px] text-center'>Add Expense</button>
+       <label className='mt-5'>
+        Income:
+        <input 
+        className='mt-2 bg-transparent ref={incomeRef}'
+        ref={incomeRef}
+         type="number"
+         value={income}
+         onChange={(e) => setIncome(Number(e.target.value))}
+         />
+       </label>
       </form>
 
-      <div className='bg-corner bottom-0 left-100'>
+      <div style={{margin:'20rem 0'}}>
+        <div className='flex flex-row mt-5 text-white font-bold'>
+        <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
+        style={{marginLeft:'0rem'}}>Income:{income}<span className='green-text-gradient font-bold'>$</span></button>
+         <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
+        style={{marginLeft:'5rem'}}>Expenses:{totalExpense}<span className='green-text-gradient font-bold'>$</span></button>
+         <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
+        style={{marginLeft:'5rem'}}>Balance:{balance}<span className='green-text-gradient font-bold'>$</span></button>
+        </div>
         <h2 className={`${styles.heroSubText} text-center mt-20`}>Expenses:</h2>
         {Object.keys(expenses).map((expenseId) => {
           const expense = expenses[expenseId];
           return (
-            <ul key={expenseId} className='flex flex-row p-2 text-white space-x-4 items-center justify-center'>
+            <ul key={expenseId} 
+            style={{border:'2px solid green'}}
+            className='flex flex-row p-2 text-white space-x-24 items-center justify-center'>
+               <li>{expense.date}</li>
               <li>{expense.description}</li>
               <li>${expense.expense}</li>
               <li>{expense.category}</li>
+             
               <button
               className='green-text-gradient '
                 type='button'
@@ -278,25 +381,10 @@ const ExpenseTracker = () => {
         })}
         </div>
       <div>
-      {totalExpense > 10000 && (
-        <button className="premium-button" onClick={handleThemeToggle}>Activate Premium</button>
-      )}
-      
-    
-    
-    {dowload && (
-    <div>
-      <CSVLink data={data} headers={headers} filename='expenseData.csv'>
-
-      <button >
-      Download
-      </button>
-      </CSVLink>
-      </div>
-      )}
+     
     </div>
     </div>
   );
 };
 
-export default ExpenseTracker;
+export default SectionWrapper(ExpenseTracker,'sectionWrapper');

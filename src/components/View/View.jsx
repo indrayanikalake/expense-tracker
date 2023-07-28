@@ -61,7 +61,7 @@ const View = () => {
       variants={fadeIn("up","tween",0.2,1)}>
       
      <form onSubmit={handleSubmit}
-     className='flex flex-col bg-black text-white  mt-12 p-8 rounded-[5px] '
+     className='flex flex-col bg-black text-white  mt-12 p-8 rounded-[5px] justify-center items-center cursor-pointer '
      
       >
         <label className='mt-2 p-8' >
@@ -98,8 +98,8 @@ const View = () => {
             />
         </label>
         <button type='submit'
-        className='mt-2 p-8 bg-gold'
-        >update</button>
+        className='mt-2 p-8 black-gradient  w-[150px] h-[10px] '
+        >Update</button>
      </form>
       </motion.div>
     </div>

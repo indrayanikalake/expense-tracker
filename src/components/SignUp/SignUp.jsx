@@ -28,7 +28,8 @@ const SignUp = () => {
 
     setError(null);
     setLoading(true);
-
+   console.log(email);
+   console.log(password);
     try {
       const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDz2JJcOPvQ6aZWZ7JSkBxM2wuUziGzq80', {
         email,
@@ -48,6 +49,7 @@ const SignUp = () => {
       }
     } catch (error) {
       console.log(error.message);
+      setLoading(false);
     }
 
     

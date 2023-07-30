@@ -150,11 +150,24 @@ const ExpenseTracker = () => {
 
   const balance = income-totalExpense;
 
-  const percentageData = Object.keys(categoryCount).map((category) => {
-    const percentage = ((100/(categories.length))*categoryCount[category] ).toFixed(1);
-    return { category, percentage };
+
+  //total expenses for each category
+  const categoryTotals = {};
+      Object.values(expenses).forEach((expense) => {
+       const { category, expense: expenseAmount } = expense;
+        if (categoryTotals[category]) {
+          categoryTotals[category] += expenseAmount;
+        } else {
+         categoryTotals[category] = expenseAmount;
+        }
+      });
+        console.log(categoryTotals);
+
+  const percentageData = Object.keys(categoryTotals).map((category) => {
+          const percentage = ((categoryTotals[category]/totalExpenses)*100).toFixed(1);
+          return { category, percentage };
   });
-  console.log(percentageData);
+        console.log(percentageData);
 
   const getCategoryPercentage = (category) => {
     const categoryData = percentageData.find((item) => item.category === category);
@@ -162,10 +175,10 @@ const ExpenseTracker = () => {
   };
 
   return (
-    <div className={`${isLightMode? 'bg-black' : 'bg-white'}`}>
+    <div className={`${isLightMode? 'black-gradient' : 'bg-white'}`}>
       <div className='flex flex-col ' >
       <button className='text-white'
-      style={{position:'absolute', top:'15px', left:'5px'}}
+      style={{position:'absolute', top:'8px', left:'5px'}}
       onClick={()=>dispatch(toggleCartVisibility())}>
         Cart
       </button>
@@ -181,21 +194,23 @@ const ExpenseTracker = () => {
         
       )}
       
-      <h1 className={`font-bold text-white text-start fixed`}>Welcome to ExpenseTracker!</h1>
-      <h1 className='  text-white text-end'>
+      <h1 className={`font-bold text-white text-start `}>Welcome to ExpenseTracker!</h1>
+      <span className='  text-white text-end'>
         Your Profile is incomplete, <Link to='/view'>Complete now</Link>
-      </h1>
+      </span>
       <div className='flex flex-row'>
       {totalExpense > 10000 && (
         <button className="text-white w-[200px]"
-        style={{ background: 'linear-gradient(to up,rgb(39, 2, 2),  rgb(244, 223, 223))'}}
+        style={{ background: 'linear-gradient(to up,rgb(39, 2, 2),  rgb(244, 223, 223))',
+      position:'absolute', top:'55px', left:'450px'}}
          onClick={handleThemeToggle}>Activate Premium</button>
       )}
        {dowload && (
     <div>
       <CSVLink data={data} headers={headers} filename='expenseData.csv'>
 
-      <button className='text-white'>
+      <button className='text-white'
+      style={{ position:'absolute', top:'55px', left:'750px'}}>
       Download
       </button>
       </CSVLink>
@@ -211,7 +226,7 @@ const ExpenseTracker = () => {
         scale:1,
         speed:450
       }}
-      className=' mt-12   flex flex-row gap-12 p-5  sm:w-[750px] rounded-[10px] h-[150px]'
+      className=' mt-9   flex flex-row gap-12 p-5  sm:w-[750px] rounded-[10px] h-[150px]'
       style={{
         background: 'linear-gradient(to bottom, violet, pink)',
         overflow:'hidden'
@@ -228,8 +243,8 @@ const ExpenseTracker = () => {
         background: 'linear-gradient(to left, green, magenta)',
         borderLeft:'10px solid black'
       }}> 
-      <p className='text-white text-center font-bold'>Food</p>
-      <p className='text-white'>{getCategoryPercentage('Food').toFixed(1)}%</p>
+      <p className='text-white text-center font-bold  bg-transparent'>Food</p>
+      <p className='text-white bg-transparent'>{getCategoryPercentage('Food').toFixed(1)}%</p>
       </Tilt>
         
         <Tilt
@@ -243,8 +258,8 @@ const ExpenseTracker = () => {
         background: 'linear-gradient(to left, gold, magenta)',
         borderLeft:'10px solid black'
       }}> 
-      <p className='text-white'>Fashion</p>
-      <p className='text-white'>{getCategoryPercentage('Fashion').toFixed(1)}%</p>
+      <p className='text-white bg-transparent'>Fashion</p>
+      <p className='text-white bg-transparent'>{getCategoryPercentage('Fashion').toFixed(1)}%</p>
       </Tilt>
        <Tilt
        options={{
@@ -257,8 +272,8 @@ const ExpenseTracker = () => {
         background: 'linear-gradient(to left, black, magenta)',
         borderLeft:'10px solid black'
       }}> 
-      <p className='text-white text-center '>Salary</p>
-      <p className='text-white'>{getCategoryPercentage('Salary').toFixed(1)}%</p>
+      <p className='ttext-white bg-transparent text-center'>Salary</p>
+      <p className='text-white bg-transparent'>{getCategoryPercentage('Salary').toFixed(1)}%</p>
       </Tilt>
       
        <Tilt
@@ -272,8 +287,8 @@ const ExpenseTracker = () => {
         background: 'linear-gradient(to left, gray, green)',
         borderLeft:'10px solid black'
       }}> 
-      <p className='text-white'>Travel</p>
-      <p className='text-white'>{getCategoryPercentage('Travel').toFixed(1)}%</p>
+      <p className='text-white bg-transparent'>Travel</p>
+      <p className='text-white bg-transparent'>{getCategoryPercentage('Travel').toFixed(1)}%</p>
       </Tilt>
        <Tilt
        options={{
@@ -286,8 +301,8 @@ const ExpenseTracker = () => {
         background: 'linear-gradient(to left, green, gold)',
         borderLeft:'10px solid black'
       }}> 
-      <p className='text-white'>Health</p>
-      <p className='text-white'>{getCategoryPercentage('Health').toFixed(1)}%</p>
+      <p className='text-white bg-transparent'>Health</p>
+      <p className='text-white bg-transparent'>{getCategoryPercentage('Health').toFixed(1)}%</p>
       </Tilt>
       </Tilt>
       </motion.div>
@@ -341,8 +356,8 @@ const ExpenseTracker = () => {
        </label>
       </form>
 
-      <div style={{margin:'20rem 0'}}>
-        <div className='flex flex-row mt-5 text-white font-bold'>
+      <div style={{margin:'19rem 0'}}>
+        <div className='flex flex-row mt-0 text-white font-bold'>
         <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
         style={{marginLeft:'0rem'}}>Income:{income}<span className='green-text-gradient font-bold'>$</span></button>
          <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'

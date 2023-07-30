@@ -29,12 +29,24 @@ const Graph = () => {
         return { category, percentage };
       });
 
+      //caluculating total expense for each category
+      const categoryTotals = {};
+      Object.values(expenses).forEach((expense) => {
+       const { category, expense: expenseAmount } = expense;
+        if (categoryTotals[category]) {
+          categoryTotals[category] += expenseAmount;
+        } else {
+         categoryTotals[category] = expenseAmount;
+        }
+      });
+        console.log(categoryTotals);
+       
       const config = {
         data:{
         datasets: [
           {
             label: 'My First Dataset',
-            data: Object.values(categoryCount),
+            data: Object.values(categoryTotals),
             backgroundColor: [
               'rgb(139, 0, 0)',
               'rgb(0, 100, 0)',
@@ -43,7 +55,7 @@ const Graph = () => {
               'rgb(165, 42, 42)',
     
             ],
-            hoverOffset: 4,
+            hoverOffset: 5,
             borderRadius:30,
             spacing:10,
             
@@ -63,9 +75,11 @@ const Graph = () => {
       whileInView={"show"}
       viewport={{once:true, amount:0.5}}
       className=' flex lg:flex-row'
+      
       >
         
-        <Tilt className=' w-[300px] h-[280px] green-pink-gradient  '
+        <Tilt className=' w-[290px] h-[280px]  green-pink-gradient '
+       
          options={{
             max:45,
             scale:1,
@@ -73,19 +87,21 @@ const Graph = () => {
           }}
         >
      
-      <Doughnut className='jusify-center items-center  green-pink-gradient ' {...config}></Doughnut>
+      <Doughnut 
+       className='jusify-center items-center green-pink-gradient' {...config}></Doughnut>
      <p className='orange-text-gradient font-bold b-corner text-[50px] mr-9'
-     style={{margin:'-2.8rem 3.8rem'}}>${totalAmount}</p>
+     style={{margin:'-1.6rem 2.9rem'}}>${totalAmount}</p>
       
       </Tilt>
-      <Tilt className='w-[440px] green-pink-gradient'>
+      <Tilt
+       className='w-[440px] green-pink-gradient '>
      
-        {percentageData.map(({category, percentage})=>(
+        {Object.entries(categoryTotals).map(([category, expense])=>(
             
                 <ul className='flex flex-row gap-8  mt-5 mx-12 bg-transparent '>
                     
             <li className='pink-text-gradient font-bold text-[20px]'>{category}</li>
-            <li className='orange-text-gradient font-bold text-[20px]'>{percentage}%</li>
+            <li className='orange-text-gradient font-bold text-[20px]'>${expense}</li>
             </ul>
             
         ))}

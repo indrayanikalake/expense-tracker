@@ -46,7 +46,7 @@ describe('Expense Tracker Component', ()=>{
     test('total expense is correctly calculated', ()=>{
         render(<ExpenseTracker />);
 
-        const totalExpenseAmount = screen.getByText('Expenses:$');
+        const totalExpenseAmount = screen.getByText('Expenses:$', {exact: false});
         expect(totalExpenseAmount).toHaveTextContent('Expenses:56430$')
     })
     //test5: check if the income input is correctly updating the state
@@ -58,6 +58,49 @@ describe('Expense Tracker Component', ()=>{
         fireEvent.change(incomeInput, {target: { value:'5000000'}});
         expect(incomeInput).toHaveValue('5000000');
     })
-    
+    // Sample test case 5: Test if the total is not negative when deleting an unknown expense
+test('Check if total remains unchanged when trying to delete an unknown expense', () => {
+    deleteExpense('Unknown Expense');
+    const expenses = getExpenseTotal();
+    expect(expenses).toBeGreaterThanOrEqual(0);
+  });
+  
+  // Sample test case 6: Test if adding a negative expense is handled correctly
+  test('Check if adding a negative expense throws an error', () => {
+    expect(() => addExpense('Negative Expense', -20)).toThrow();
+  });
+  
+  // Sample test case 7: Test if the total remains unchanged when adding a negative expense
+  test('Check if total remains unchanged when adding a negative expense', () => {
+    try {
+      addExpense('Negative Expense', -15);
+    } catch (error) {}
+    const expenses = getExpenseTotal();
+    expect(expenses).toEqual(0);
+  });
+  
+  // Sample test case 8: Test if an expense is deleted correctly, even if it was not previously added
+  test('Delete an expense that was not added and check if the total is unchanged', () => {
+    deleteExpense('Non-existent Expense');
+    const expenses = getExpenseTotal();
+    expect(expenses).toEqual(0);
+  });
+  
+  // Sample test case 9: Test if the expense total is correct after adding and deleting expenses
+  test('Add and delete expenses and check if the total is correct', () => {
+    addExpense('Lunch', 15);
+    addExpense('Gas', 40);
+    deleteExpense('Lunch');
+    addExpense('Movie', 20);
+    const expenses = getExpenseTotal();
+    expect(expenses).toEqual(60);
+  });
+  
+  // Sample test case 10: Test if the expense total is not affected by adding a non-numeric amount
+  test('Check if adding a non-numeric amount does not affect the total', () => {
+    addExpense('Invalid Expense', 'Invalid Amount');
+    const expenses = getExpenseTotal();
+    expect(expenses).toEqual(0);  
+  });
    
 })

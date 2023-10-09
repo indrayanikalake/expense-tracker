@@ -100,12 +100,30 @@ body.dark-mode{
     #804dee 0%,
     rgba(60, 51, 80, 0) 100%
   );
+
 }
+
+.green-gradient {
+  background: #804dee;
+  background: linear-gradient(-90deg, #6bee4d 0%, rgba(227, 225, 229) 100%);
+  background: -webkit-linear-gradient(
+    -90deg,
+    #24c041 0%,
+    rgba(227, 227, 231) 100%
+  );
+}
+
+
 
 .gold-white-gradient {
   background:#000000;
   background: linear-gradient(90.13deg, #f3f97f 1.9%, #fdfbfd 97.5%);
   background: -webkit-linear-gradient(-90.13deg, #eceeb2 1.9%, #ffff 97.5%);
+}
+.blue-bangon-gradient {
+  background:#000000;
+  background: linear-gradient(90.13deg, #1212da 1.9%, #aaf2f4 97.5%);
+  background: -webkit-linear-gradient(-90.13deg, #040487 1.9%, #acb8f1 97.5%);
 }
 
 .orange-text-gradient {

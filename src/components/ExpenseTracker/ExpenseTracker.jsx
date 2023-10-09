@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import alanBtn from '@alan-ai/alan-sdk-web';
 import { Link } from 'react-router-dom';
 import { Tilt } from 'react-tilt';
 import { Context } from '../Context/Context';
@@ -13,7 +14,7 @@ import { Card, Typography } from '@material-ui/core';
 import Graph from './Graph';
 import { motion } from 'framer-motion';
 import { SectionWrapper } from '../../hoc';
-import { fadeIn } from '../../utils/motion';
+import { fadeIn, slideIn } from '../../utils/motion';
 
 
 const ExpenseTracker = () => {
@@ -28,7 +29,7 @@ const ExpenseTracker = () => {
   const incomeRef = useRef(null);
   const [income, setIncome] = useState(0);
   const email = localStorage.getItem('email')?.replace('@','').replace('.','');
-  
+  const alanKey='bb966699a022619e2e4f6d2eb1c2a4732e956eca572e1d8b807a3e2338fdd0dc/stage';
  
    const [dowload,setDownload] = useState(false);
    const incomeValue = incomeRef.current? incomeRef.current.value :0;
@@ -48,6 +49,15 @@ const ExpenseTracker = () => {
   useEffect(() =>{
     fetchData();
   },[]);
+
+  useEffect(() => {
+    alanBtn({
+        key: alanKey,
+        onCommand: (commandData) => {
+         console.log(commandData);
+        }
+    });
+  }, []);
 
   const fetchData = async () =>{
     try{
@@ -174,6 +184,10 @@ const ExpenseTracker = () => {
     return categoryData ? parseFloat(categoryData.percentage) : 0;
   };
 
+  const removeLocal = () =>{
+    localStorage.removeItem('email');
+    localStorage.removeItem('token');
+  }
   return (
     <div className={`${isLightMode? 'black-gradient' : 'bg-white'}`}>
       <div className='flex flex-col ' >
@@ -182,14 +196,14 @@ const ExpenseTracker = () => {
       onClick={()=>dispatch(toggleCartVisibility())}>
         Cart
       </button>
+      
       {isVisible && (
         
-          <Card className='w-[220px] lg:h-[600px] mx-2 my-12 p-12 text-start '
-          style={{boxShadow:'10px 10px 10px rgb(250, 251, 249)'}}>
-            <Typography 
-            className='text-white text-start  '>Expense</Typography>
+          <Card className='w-[200px] lg:h-[60px] mx-2 my-12 p-12 text-start '
+          style={{boxShadow:'1px 1px 1px rgb(250, 251, 249)',position:'absolute', zIndex:'1'}}>
+             <button type='button' onClick={()=>{removeLocal()}}>
             <Link to='/signIn' 
-            className='text-white violet-gradient'>Sign Out</Link>
+            className='text-white violet-gradient'>Sign Out</Link></button>
           </Card>
         
       )}
@@ -226,7 +240,7 @@ const ExpenseTracker = () => {
         scale:1,
         speed:450
       }}
-      className=' mt-9   flex flex-row gap-12 p-5  sm:w-[750px] rounded-[10px] h-[150px]'
+      className=' mt-8   flex flex-row gap-12 p-5  sm:w-[750px] rounded-[10px] h-[150px]'
       style={{
         background: 'linear-gradient(to bottom, violet, pink)',
         overflow:'hidden'
@@ -238,7 +252,7 @@ const ExpenseTracker = () => {
         scale:1,
         speed:450
       }}
-      className='  p-5 rounded-2xl sm:w-[100px] rounded-full w-[5px] h-[100px]'
+      className='  p-5  sm:w-[100px] rounded-full w-[5px] h-[100px]'
       style={{
         background: 'linear-gradient(to left, green, magenta)',
         borderLeft:'10px solid black'
@@ -253,7 +267,7 @@ const ExpenseTracker = () => {
         scale:1,
         speed:450
       }}
-      className='bg-tertiery  p-5 rounded-2xl sm:w-[100px] rounded-full w-[5px] h-[100px]'
+      className='bg-tertiery  p-5  sm:w-[100px] rounded-full w-[5px] h-[100px]'
       style={{
         background: 'linear-gradient(to left, gold, magenta)',
         borderLeft:'10px solid black'
@@ -267,7 +281,7 @@ const ExpenseTracker = () => {
         scale:1,
         speed:450
       }}
-      className='bg-tertiery  p-5 rounded-2xl sm:w-[100px] rounded-full w-[5px] h-[100px]'
+      className='bg-tertiery  p-5  sm:w-[100px] rounded-full w-[5px] h-[100px]'
       style={{
         background: 'linear-gradient(to left, black, magenta)',
         borderLeft:'10px solid black'
@@ -282,7 +296,7 @@ const ExpenseTracker = () => {
         scale:1,
         speed:450
       }}
-      className='bg-tertiery  p-5 rounded-2xl sm:w-[100px] rounded-full w-[5px] h-[100px]'
+      className='bg-tertiery  p-5  sm:w-[100px] rounded-full w-[5px] h-[100px]'
       style={{
         background: 'linear-gradient(to left, gray, green)',
         borderLeft:'10px solid black'
@@ -296,7 +310,7 @@ const ExpenseTracker = () => {
         scale:1,
         speed:450
       }}
-      className='bg-tertiery  p-5 rounded-2xl sm:w-[100px] rounded-full w-[5px] h-[100px]'
+      className='bg-tertiery  p-5  sm:w-[100px] rounded-full w-[5px] h-[100px]'
       style={{
         background: 'linear-gradient(to left, green, gold)',
         borderLeft:'10px solid black'
@@ -311,7 +325,7 @@ const ExpenseTracker = () => {
       style={{margin :'2.1rem 0', height:'2vh'}} >
        <Graph />
       </motion.div>
-      
+     
       <form onSubmit={handleSubmit} 
        className=' text-white flex flex-col w-[420px] h-[540px] p-10 b-corner bg-transparent sm:absolute'
        >
@@ -355,7 +369,7 @@ const ExpenseTracker = () => {
          />
        </label>
       </form>
-
+      
       <div style={{margin:'19rem 0'}}>
         <div className='flex flex-row mt-0 text-white font-bold'>
         <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
@@ -365,20 +379,21 @@ const ExpenseTracker = () => {
          <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
         style={{marginLeft:'5rem'}}>Balance:{balance}<span className='green-text-gradient font-bold'>$</span></button>
         </div>
-        <h2 className={`${styles.heroSubText} text-center mt-20`}>Expenses:</h2>
+     
+        <h2 className={`${styles.heroSubText} text-center mt-20 black-gradient`}>Expenses:</h2>
         {Object.keys(expenses).map((expenseId) => {
           const expense = expenses[expenseId];
           return (
             <ul key={expenseId} 
             style={{border:'2px solid green'}}
-            className='flex flex-row p-2 text-white space-x-24 items-center justify-center'>
+            className='flex flex-row p-2 text-white space-x-24 bg-transparent  items-center justify-center'>
                <li>{expense.date}</li>
               <li>{expense.description}</li>
               <li>${expense.expense}</li>
               <li>{expense.category}</li>
              
               <button
-              className='green-text-gradient '
+              className='green-text-gradient font-bold '
                 type='button'
                 onClick={() => {
                 
@@ -387,7 +402,7 @@ const ExpenseTracker = () => {
               >
                 Edit
               </button>
-              <button className='rounded orange-text-gradient'
+              <button className='rounded orange-text-gradient font-bold'
               type='button' onClick={() => handleDelete(expenseId)}>
                 Delete
               </button>

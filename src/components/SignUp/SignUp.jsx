@@ -31,12 +31,13 @@ const SignUp = () => {
    console.log(email);
    console.log(password);
     try {
-      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDz2JJcOPvQ6aZWZ7JSkBxM2wuUziGzq80', {
+      const response = await axios.post('http://localhost:7000/user', {
         email,
         password,
-        returnSecureToken: true,
+        
       });
       setLoading(false);
+      
       if (response.status === 200) {
        
         console.log('User has successfully signed up');

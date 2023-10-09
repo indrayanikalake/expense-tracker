@@ -98,7 +98,7 @@ const Graph = () => {
      
         {Object.entries(categoryTotals).map(([category, expense])=>(
             
-                <ul className='flex flex-row gap-8  mt-5 mx-12 bg-transparent '>
+                <ul key={category} className='flex flex-row gap-8  mt-5 mx-12 bg-transparent '>
                     
             <li className='pink-text-gradient font-bold text-[20px]'>{category}</li>
             <li className='orange-text-gradient font-bold text-[20px]'>${expense}</li>

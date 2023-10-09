@@ -2,15 +2,17 @@ const express = require('express');
 const cors = require('cors');
 const router = require('./routes/router');
 const sequelize = require('./util/database');
+const dotenv = require('dotenv');
 
-//const sequelize = require('./util/database');
+dotenv.config();
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 
-app.use(router);
+app.use('/user',router);
 
 sequelize.sync()
 .then(res=>

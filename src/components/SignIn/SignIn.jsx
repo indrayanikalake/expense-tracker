@@ -32,19 +32,19 @@ const SignIn = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDz2JJcOPvQ6aZWZ7JSkBxM2wuUziGzq80', {
+      const response = await axios.post('http://localhost:7000/user/login', {
         email,
         password,
-        returnSecureToken: true,
+      
       });
       setLoading(false);
       if (response.status === 200) {
         console.log(response.data);
         console.log('User has successfully signed in');
-        console.log(response.data.idToken);
-        localStorage.setItem('token',response.data.idToken);
+        console.log(response.data.token);
+        localStorage.setItem('token',response.data.token);
         localStorage.setItem('email', response.data.email);
-        update(response.data.idToken);
+        update(response.data.token);
 
         enteredEmail.current.value='';
         enteredPassword.current.value='';

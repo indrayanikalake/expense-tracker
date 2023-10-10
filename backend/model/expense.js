@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 const sequelize = require("../util/database");
 
-const Expense = sequelize.define({
+const Expense = sequelize.define('expense',{
     id:{
         type: DataTypes.INTEGER,
         allowNull:false,
@@ -16,13 +16,14 @@ const Expense = sequelize.define({
         type:DataTypes.STRING,
         allowNull:false
     },
-    Category:{
+    category:{
         type:DataTypes.STRING,
         allowNull:false
     },
     date:{
-        type:DataTypes.DATE,
+        type:DataTypes.STRING,
         allowNull:false
     }
 
-})
+});
+module.exports = Expense

@@ -27,8 +27,8 @@ const authUser = asyncHandler(async (req,res)=>{
 
     const users = await  User.findAll({where:{email: email}});
     console.log(users[0]);
-     const newPassword = await Bcrypt.compare(password, users[0].password)
-    console.log(newPassword);
+     const newPassword = await Bcrypt.compare(password, users[0].password);
+    console.log("newPassword : ", newPassword);
 
     if(!users){
        res.status(401).send('client is not authorized to access the requested resource')

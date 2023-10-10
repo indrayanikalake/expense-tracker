@@ -15,7 +15,7 @@ import Graph from './Graph';
 import { motion } from 'framer-motion';
 import { SectionWrapper } from '../../hoc';
 import { fadeIn, slideIn } from '../../utils/motion';
-
+import { v4 as uuidv4 } from 'uuid';
 
 const ExpenseTracker = () => {
   const dispatch = useDispatch();
@@ -30,11 +30,12 @@ const ExpenseTracker = () => {
   const [income, setIncome] = useState(0);
   const email = localStorage.getItem('email')?.replace('@','').replace('.','');
   const alanKey='bb966699a022619e2e4f6d2eb1c2a4732e956eca572e1d8b807a3e2338fdd0dc/stage';
+  const token = localStorage.getItem('token');
  
    const [dowload,setDownload] = useState(false);
    const incomeValue = incomeRef.current? incomeRef.current.value :0;
   console.log(incomeValue);
-
+console.log(token);
  console.log(expenses);
 
   const data = Object.values(expenses).map((expense)=>expense);
@@ -61,7 +62,7 @@ const ExpenseTracker = () => {
 
   const fetchData = async () =>{
     try{
-    const getResponse = await axios.get(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/${email}.json`);
+    const getResponse = await axios.get('http://localhost:7000/expense');
     console.log(getResponse);
     if(getResponse.data === null){
       getResponse.data = {};
@@ -89,12 +90,24 @@ const ExpenseTracker = () => {
     };
 
     dispatch(addExpenses(newExpense));
+    const localId = uuidv4();
+    const newExpenseWithId = {
+      ...newExpense,
+        localId: localId
+    }
     try{
-       const response = await axios.post(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/${email}.json`,
-       newExpense
+      const config = {
+        headers:{
+          Authorization:`Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      }
+
+       const response = await axios.post('http://localhost:7000/expense',
+       newExpenseWithId, config
        )
        console.log(response);
-        fetchData();
+       await fetchData();
      
     }catch(error){
        console.log(error);

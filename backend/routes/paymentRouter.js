@@ -4,7 +4,7 @@ const { createOrder, verifyPayment } = require('../controllers/paymentController
 
 const router = express.Router();
 
-router.post('/payment', createOrder);
+router.post('/payment',verifyPayment, createOrder);
 router.route('/verifypayment').post(verifyUser, verifyPayment)
 
 

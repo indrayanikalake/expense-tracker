@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './App.css';
-import { BarA, ExpenseTracker, ResetPassword, SignIn, SignUp, View } from './components';
+import { BarA, ExpenseTracker, Leaderboard, ResetPassword, SignIn, SignUp, View } from './components';
 import { ContextProvider } from './components/Context/Context';
 import Profile from './components/View/Profile';
 import { motion } from 'framer-motion';
@@ -32,7 +32,7 @@ function App() {
           <Route exact path='/profile' element={<Profile />} />
           <Route exact path='/resetPassword' element={<ResetPassword />} />
           <Route exact path='/shopping' element={<Shoppingcart />} />
-         
+           <Route exact path='/leaderboard' element={Leaderboard} />
         
         </Routes>
         </div>

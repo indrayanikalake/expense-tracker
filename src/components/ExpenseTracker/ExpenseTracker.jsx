@@ -17,12 +17,14 @@ import { SectionWrapper } from '../../hoc';
 import { fadeIn, slideIn } from '../../utils/motion';
 import { v4 as uuidv4 } from 'uuid';
 import { paymentHandler } from '../../Redux/PaymentSlice';
+import { getLeaderboardData } from '../../Redux/LeaderboardSlice';
 
 const ExpenseTracker = () => {
   const dispatch = useDispatch();
   const expenses = useSelector((state) => state.expenses.expenses);
   const isLightMode = useSelector((state) =>state.theme.lightMode);
-  const isVisible = useSelector((state) =>state.cart.isVisible)
+  const isVisible = useSelector((state) =>state.cart.isVisible);
+  const paymentSuccess = useSelector((state)=>state.payment.paymentSuccess);
   const expenseRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
@@ -38,7 +40,7 @@ const ExpenseTracker = () => {
   console.log(incomeValue);
 console.log(token);
  console.log(expenses);
-
+console.log(paymentSuccess);
   const data = Object.values(expenses).map((expense)=>expense);
   console.log(data);
 
@@ -222,13 +224,20 @@ console.log(token);
       
       {isVisible && (
         <div>
-          <Card className='w-[200px] lg:h-[60px] mx-2 my-12 p-12 text-start '
-          style={{boxShadow:'1px 1px 1px rgb(250, 251, 249)',position:'absolute', zIndex:'1'}}>
+          <Card className='w-[200px] md:h-full mx-0.5 my-12 p-12 text-start '
+          style={{boxShadow:'1px 1px 1px rgb(250, 251, 249)',position:'absolute', zIndex:'1', padding:'5rem'}}>
              <button type='button' onClick={()=>{removeLocal()}}>
             <Link to='/signIn' 
             className='text-white violet-gradient'>Sign Out</Link></button>
              <button  className='text-white violet-gradient' type='button' onClick={handlePayment}>
            Buy Premium</button>
+         {paymentSuccess && ( 
+         <Link to='/leaderboard'>
+            <button  className='text-white violet-gradient' type='button' onClick={()=>dispatch(getLeaderboardData)}>
+           Dashboard
+           </button>
+           </Link>
+          )}
           </Card>
          
           </div>
@@ -240,11 +249,11 @@ console.log(token);
         Your Profile is incomplete, <Link to='/view'>Complete now</Link>
       </span>
       <div className='flex flex-row'>
-      {totalExpense > 10000 && (
+      {paymentSuccess && (
         <button className="text-white w-[200px]"
-        style={{ background: 'linear-gradient(to up,rgb(39, 2, 2),  rgb(244, 223, 223))',
+        style={{ background: 'linear-gradient(to up,blue, black)', fontSize:'12px',
       position:'absolute', top:'55px', left:'450px'}}
-         onClick={handleThemeToggle}>Activate Premium</button>
+         onClick={handleThemeToggle}>Premium Member</button>
       )}
        {dowload && (
     <div>
@@ -405,9 +414,6 @@ console.log(token);
         style={{marginLeft:'5rem'}}>Expenses:{totalExpense}<span className='green-text-gradient font-bold'>$</span></button>
          <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
         style={{marginLeft:'5rem'}}>Balance:{balance}<span className='green-text-gradient font-bold'>$</span></button>
-         <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
-         onClick={handlePayment}
-        style={{marginLeft:'5rem'}}>Buy Premium</button>
         </div>
      
         <h2 className={`${styles.heroSubText} text-center mt-20 black-gradient`}>Expenses:</h2>

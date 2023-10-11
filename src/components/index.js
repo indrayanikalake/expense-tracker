@@ -5,4 +5,5 @@ export { default as View } from './View/View';
 export { default as Profile } from './View/Profile';
 export { default as ResetPassword } from './SignIn/ResetPassword';
 export { default as BarA } from './ExpenseTracker/Bar';
+export { default  as Leaderboard} from './Leaderboard/Leaderboard';
 

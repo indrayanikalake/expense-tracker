@@ -6,6 +6,7 @@ import authReducer from './AuthSlice';
 import themeReducer from './ThemeSlice';
 import cartReducer from './CartSlice';
 import cartStatusReducer from './CartStatus';
+import paymentSliceReducer from './PaymentSlice';
 
 
 const store = configureStore({
@@ -15,6 +16,7 @@ const store = configureStore({
     theme: themeReducer,
     cart:cartReducer,
     cartStatus: cartStatusReducer,
+    payment: paymentSliceReducer
   },
 });
 

@@ -16,6 +16,7 @@ import { motion } from 'framer-motion';
 import { SectionWrapper } from '../../hoc';
 import { fadeIn, slideIn } from '../../utils/motion';
 import { v4 as uuidv4 } from 'uuid';
+import { paymentHandler } from '../../Redux/PaymentSlice';
 
 const ExpenseTracker = () => {
   const dispatch = useDispatch();
@@ -201,6 +202,15 @@ console.log(token);
     localStorage.removeItem('email');
     localStorage.removeItem('token');
   }
+
+  const handlePayment = () =>{
+    try{
+      dispatch(paymentHandler())
+
+    }catch(error){
+      console.log(error);
+    }
+  }
   return (
     <div className={`${isLightMode? 'black-gradient' : 'bg-white'}`}>
       <div className='flex flex-col ' >
@@ -211,14 +221,18 @@ console.log(token);
       </button>
       
       {isVisible && (
-        
+        <div>
           <Card className='w-[200px] lg:h-[60px] mx-2 my-12 p-12 text-start '
           style={{boxShadow:'1px 1px 1px rgb(250, 251, 249)',position:'absolute', zIndex:'1'}}>
              <button type='button' onClick={()=>{removeLocal()}}>
             <Link to='/signIn' 
             className='text-white violet-gradient'>Sign Out</Link></button>
+             <button  className='text-white violet-gradient' type='button' onClick={handlePayment}>
+           Buy Premium</button>
           </Card>
-        
+         
+          </div>
+           
       )}
       
       <h1 className={`font-bold text-white text-start `}>Welcome to ExpenseTracker!</h1>
@@ -391,6 +405,9 @@ console.log(token);
         style={{marginLeft:'5rem'}}>Expenses:{totalExpense}<span className='green-text-gradient font-bold'>$</span></button>
          <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
         style={{marginLeft:'5rem'}}>Balance:{balance}<span className='green-text-gradient font-bold'>$</span></button>
+         <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
+         onClick={handlePayment}
+        style={{marginLeft:'5rem'}}>Buy Premium</button>
         </div>
      
         <h2 className={`${styles.heroSubText} text-center mt-20 black-gradient`}>Expenses:</h2>

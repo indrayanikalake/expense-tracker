@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const authSlice = createSlice({
     name:'auth',
@@ -24,3 +25,14 @@ const authSlice = createSlice({
 export const { login, logout } = authSlice.actions;
 const authReducer =authSlice.reducer;
 export default authReducer;
+
+const resetPassword = (email,password, uuid) =>{
+    return async(dispatch, getState)=>{
+        try{
+            const response = await axios.post('http://localhost:7000/password/resetPassword/${uuid}',{emai:email, password:pawword})
+            console.log(response);
+        }catch(error){
+            console.log(error);
+        }
+    }
+}

@@ -4,6 +4,8 @@ const { v4: uuidv4 } = require("uuid");
 const dotenv = require('dotenv');
 const ForgetPasswordRequest = require('../model/ForgetPasswordRequst');
 const User = require('../model/user');
+const Bcrypt = require('bcryptjs');
+const sequelize = require('../util/database');
 
 dotenv.config();
 
@@ -102,4 +104,40 @@ const sendEmail =  asyncHandler(async (req,res)=>{
 
 })
 
-module.exports = sendEmail;
+const resetPassword = asyncHandler(async (req, res)=>{
+    const transactionObj = await sequelize.transaction();
+    const {email, password} = req.body;
+    const isRewuestActive = await ForgetPasswordRequest.findAll({
+        where:{uuid: req.params.uuid}
+    });
+
+    if(isRewuestActive[0].isActive === false) return res.status(500).json({ message: "sorry this url is expired !" });
+
+    try{
+       const bcryptedPassword = await Bcrypt.hash(password,10);
+
+       await User.update(
+        {password:bcryptedPassword},
+        {where:{email:email}},
+        {transaction: transactionObj}
+       )
+       
+       await ForgetPasswordRequest.update(
+        {isActive:false},
+        {where:{uuid: req.params.uuid}},
+        {transaction: transactionObj}
+       )
+
+    await transactionObj.commit();
+      res.status(200)
+     .json({ message: "your password has been updated successfully" });
+
+    }catch(error){
+        await transactionObj.rollback();
+        res.status(404);
+        throw new Error('user not found')
+
+    }
+})
+
+module.exports = {sendEmail , resetPassword};

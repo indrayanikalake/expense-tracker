@@ -2,23 +2,36 @@ const asyncHandler = require('express-async-handler');
 const Bcrypt = require("bcryptjs");
 const User = require('../model/user');
 const generateToken = require('../config/generateToken');
+const sequelize = require('../util/database');
 
 
 const registerUser = asyncHandler(async(req,res)=>{
-
+    const transactionObj = await sequelize.transaction();
     const { email, password } = req.body;
     console.log(email, password);
+
+    const userExists = await User.findAll(
+      { where: { email: email } },
+      { transaction: transactionObj }
+    );
+
+    if (userExists.length === 0){
     const bcryptedPassword = await Bcrypt.hash(password,10);
     try{
         await User.create({
             email, password:bcryptedPassword, total_cost:0
         })
+        await transactionObj.commit();
         res.status(200).send('successful');
 
     }catch(error){
-     res.status(400).send(error);
-     throw new Error(error);
+        await transactionObj.rollback();
+        res.status(400);
+        throw new Error(error);
     } 
+}else{
+    res.status(409).send('user is already registered');
+}
 
 })
 

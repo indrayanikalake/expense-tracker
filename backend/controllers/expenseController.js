@@ -1,8 +1,10 @@
 const asyncHandler = require('express-async-handler');
 const Expense = require('../model/expense');
 const User = require('../model/user');
+const sequelize = require('../util/database');
 
 const postExpense = asyncHandler(async (req, res)=>{
+     const transactionObj = await sequelize.transaction();
 const {  expense, description, category, date } = req.body;
 console.log(expense, description, category, date);
 console.log(req.userId);
@@ -14,7 +16,7 @@ try{
         category, 
         date
 
-    })
+    },{transaction: transactionObj})
     
    const user = await User.findAll( 
     
@@ -23,10 +25,13 @@ try{
 
    await User.update(
    { total_cost: user[0].total_cost + Number(req.body.expense) },
-   {where:{id:req.userId}});
+   {where:{id:req.userId}},
+   {transaction: transactionObj});
+   await transactionObj.commit();
     res.status(200).send("successful");
 
 }catch(err){
+    await transactionObj.rollback();
     console.log(err.message);
     
     res.status(400);

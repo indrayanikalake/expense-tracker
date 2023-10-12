@@ -11,7 +11,7 @@ const registerUser = asyncHandler(async(req,res)=>{
     const bcryptedPassword = await Bcrypt.hash(password,10);
     try{
         await User.create({
-            email, password:bcryptedPassword
+            email, password:bcryptedPassword, total_cost:0
         })
         res.status(200).send('successful');
 
@@ -45,4 +45,15 @@ const authUser = asyncHandler(async (req,res)=>{
 
 })
 
-module.exports = {registerUser, authUser };
+
+const getUser = asyncHandler(async (req,res)=>{
+    try{
+            const response = await User.findAll({where:{id:req.userId}})
+            console.log(response);
+            res.status(200).send(response);
+    }catch(error){
+        res.status(400);
+        throw new Error(error);
+    }
+})
+module.exports = {registerUser, authUser,getUser };

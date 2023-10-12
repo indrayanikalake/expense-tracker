@@ -19,7 +19,7 @@ app.use(express.json());
 
 app.use('/user',router);
 app.use('/expense',expenseRouter);
-app.use('/premium', premiumRouter);
+app.use('/premium/showDashboard', premiumRouter);
 app.use(paymentRouter);
 
 

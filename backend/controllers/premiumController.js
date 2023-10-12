@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../model/user');
+const Expense = require('../model/expense');
 
 const createDashboard = asyncHandler(async (req,res)=>{
        let data = [];
@@ -7,8 +8,9 @@ const createDashboard = asyncHandler(async (req,res)=>{
              const leaderboardofusers = await User.findAll({
                 attributes:['id','email','total_cost'],
                 group:['user.id'],
-                order:[['total_cost', "DESC"]],
+                order:[['total_cost', 'DESC']],
                 limit:5
+              
              })
              console.log(leaderboardofusers);
              res.status(200).json({leaderboardofusers})

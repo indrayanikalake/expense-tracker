@@ -5,7 +5,7 @@ const { createDashboard } = require('../controllers/premiumController');
 
 const router = express.Router();
 
-router.route('/showDashboard').get(verifyUser,createDashboard)
+router.route('/').get(createDashboard)
 
 
 module.exports = router;

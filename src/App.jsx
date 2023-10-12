@@ -32,7 +32,7 @@ function App() {
           <Route exact path='/profile' element={<Profile />} />
           <Route exact path='/resetPassword' element={<ResetPassword />} />
           <Route exact path='/shopping' element={<Shoppingcart />} />
-           <Route exact path='/leaderboard' element={Leaderboard} />
+           <Route exact path='/leaderboard' element={<Leaderboard /> } />
         
         </Routes>
         </div>

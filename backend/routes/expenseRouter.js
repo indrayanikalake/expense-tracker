@@ -7,6 +7,6 @@ const { postExpense, getExpense } = require('../controllers/expenseController');
 const router = express.Router();
 
 router.route('/').post(verifyUser , postExpense);
-router.route('/').get( verifyUser ,getExpense);
+router.get('/',verifyUser,getExpense);
 
 module.exports = router;

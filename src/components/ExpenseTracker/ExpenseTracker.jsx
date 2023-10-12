@@ -25,6 +25,7 @@ const ExpenseTracker = () => {
   const isLightMode = useSelector((state) =>state.theme.lightMode);
   const isVisible = useSelector((state) =>state.cart.isVisible);
   const paymentSuccess = useSelector((state)=>state.payment.paymentSuccess);
+  const [isPremiumUser, setIsPremiumUser] = useState(false);
   const expenseRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
@@ -64,9 +65,18 @@ console.log(paymentSuccess);
   }, []);
 
   const fetchData = async () =>{
+    console.log('fetching');
+    const config={
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
+    }
     try{
-    const getResponse = await axios.get('http://localhost:7000/expense');
+    const getResponse = await axios.get('http://localhost:7000/expense',config);
     console.log(getResponse);
+    const user= await axios.get('http://localhost:7000/user',config);
+    console.log(user.data[0].isPremiumUser);
+    setIsPremiumUser(user.data[0].isPremiumUser);
     if(getResponse.data === null){
       getResponse.data = {};
     }
@@ -110,7 +120,7 @@ console.log(paymentSuccess);
        newExpenseWithId, config
        )
        console.log(response);
-       await fetchData();
+       fetchData();
      
     }catch(error){
        console.log(error);
@@ -231,9 +241,9 @@ console.log(paymentSuccess);
             className='text-white violet-gradient'>Sign Out</Link></button>
              <button  className='text-white violet-gradient' type='button' onClick={handlePayment}>
            Buy Premium</button>
-         {paymentSuccess && ( 
+         {isPremiumUser && ( 
          <Link to='/leaderboard'>
-            <button  className='text-white violet-gradient' type='button' onClick={()=>dispatch(getLeaderboardData)}>
+            <button  className='text-white violet-gradient' type='button' onClick={()=>dispatch(getLeaderboardData())}>
            Dashboard
            </button>
            </Link>
@@ -249,7 +259,7 @@ console.log(paymentSuccess);
         Your Profile is incomplete, <Link to='/view'>Complete now</Link>
       </span>
       <div className='flex flex-row'>
-      {paymentSuccess && (
+      {isPremiumUser && (
         <button className="text-white w-[200px]"
         style={{ background: 'linear-gradient(to up,blue, black)', fontSize:'12px',
       position:'absolute', top:'55px', left:'450px'}}

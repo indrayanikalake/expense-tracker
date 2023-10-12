@@ -71,7 +71,7 @@ return async (dispatch, getState) =>{
 
 export const paymentHandler = ()=>{
 
-    return async (dispatch, getState)=>{
+    return async(dispatch, getState)=>{
         console.log(token);
         const config = {
             headers:{

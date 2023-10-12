@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Expense = require('../model/expense');
+const User = require('../model/user');
 
 const postExpense = asyncHandler(async (req, res)=>{
 const {  expense, description, category, date } = req.body;
@@ -15,6 +16,14 @@ try{
 
     })
     
+   const user = await User.findAll( 
+    
+    {where:{id: req.userId }}
+    );
+
+   await User.update(
+   { total_cost: user[0].total_cost + Number(req.body.expense) },
+   {where:{id:req.userId}});
     res.status(200).send("successful");
 
 }catch(err){

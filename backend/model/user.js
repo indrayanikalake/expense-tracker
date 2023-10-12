@@ -17,6 +17,12 @@ const User = sequelize.define('user',{
         type:DataTypes.STRING,
         allowNull:false
     },
+    isPremiumUser:{
+        type:DataTypes.BOOLEAN,
+    },
+    total_cost:{
+        type:DataTypes.BIGINT
+    }
   
 })
 

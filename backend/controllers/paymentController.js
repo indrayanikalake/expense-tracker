@@ -28,7 +28,7 @@ const createOrder = asyncHandler(async (req,res)=>{
                 await Order.create({
                     orderId: order.id,
                     status:"Pending",
-                    userId: req.userId,
+           
                 },
                 {transaction:transactionObj}
                 )

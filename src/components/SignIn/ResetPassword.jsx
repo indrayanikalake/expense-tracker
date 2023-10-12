@@ -10,19 +10,14 @@ const ResetPassword = () => {
 
     const handleSubmit = async ()=>{
         const email = emailRef.current.value;
-       
+        console.log(email);
+   
         try{
             console.log('wait');
-            const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDz2JJcOPvQ6aZWZ7JSkBxM2wuUziGzq80',{
-             requestType:"PASSWORD_RESET",
-             email
-            });
+            const response = await axios.post('http://localhost:7000/password/sendEmail',{email:email});
             console.log(response);
     
-            if(response.status === 200){
-                SetSent(true);
-            }
-
+           
         }catch(error){
             console.log(error);
             setError('something went wrong');

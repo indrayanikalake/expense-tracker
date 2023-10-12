@@ -3,7 +3,8 @@ const cors = require('cors');
 const router = require('./routes/router');
 const expenseRouter = require('./routes/expenseRouter');
 const paymentRouter = require('./routes/paymentRouter');
-const premiumRouter = require('./routes/premiumRouter')
+const premiumRouter = require('./routes/premiumRouter');
+const sendEmailRouter = require('./routes/sendEmailRouter')
 const sequelize = require('./util/database');
 const dotenv = require('dotenv');
 const User = require('./model/user');
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use('/user',router);
 app.use('/expense',expenseRouter);
 app.use('/premium/showDashboard', premiumRouter);
+app.use('/password', sendEmailRouter)
 app.use(paymentRouter);
 
 

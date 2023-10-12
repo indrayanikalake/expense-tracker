@@ -18,6 +18,7 @@ import { fadeIn, slideIn } from '../../utils/motion';
 import { v4 as uuidv4 } from 'uuid';
 import { paymentHandler } from '../../Redux/PaymentSlice';
 import { getLeaderboardData } from '../../Redux/LeaderboardSlice';
+import BarA from './Bar';
 
 const ExpenseTracker = () => {
   const dispatch = useDispatch();
@@ -242,11 +243,18 @@ console.log(paymentSuccess);
              <button  className='text-white violet-gradient' type='button' onClick={handlePayment}>
            Buy Premium</button>
          {isPremiumUser && ( 
+          <>
          <Link to='/leaderboard'>
             <button  className='text-white violet-gradient' type='button' onClick={()=>dispatch(getLeaderboardData())}>
            Dashboard
            </button>
            </Link>
+            <Link to='/optimizedUser'>
+            <button  className='text-white violet-gradient' type='button' >
+             Optimized User
+           </button>
+           </Link>
+           </>
           )}
           </Card>
          
@@ -417,7 +425,7 @@ console.log(paymentSuccess);
       </form>
       
       <div style={{margin:'19rem 0'}}>
-        <div className='flex flex-row mt-0 text-white font-bold'>
+       <div className='flex flex-row mt-0 text-white font-bold'>
         <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
         style={{marginLeft:'0rem'}}>Income:{income}<span className='green-text-gradient font-bold'>$</span></button>
          <button className='violet-gradient w-[200px] h-[80px] rounded-[10px] ml-0'
@@ -426,8 +434,10 @@ console.log(paymentSuccess);
         style={{marginLeft:'5rem'}}>Balance:{balance}<span className='green-text-gradient font-bold'>$</span></button>
         </div>
      
-        <h2 className={`${styles.heroSubText} text-center mt-20 black-gradient`}>Expenses:</h2>
-        {Object.keys(expenses).map((expenseId) => {
+        {isPremiumUser &&(
+          <div>
+          <h2 className={`${styles.heroSubText} text-center mt-20 black-gradient`}>Expenses:</h2>
+         {Object.keys(expenses).map((expenseId) => {
           const expense = expenses[expenseId];
           return (
             <ul key={expenseId} 
@@ -454,7 +464,10 @@ console.log(paymentSuccess);
               </button>
             </ul>
           );
-        })}
+         })}
+        
+         </div>
+        )}
         </div>
       <div>
      

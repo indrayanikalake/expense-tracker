@@ -124,6 +124,53 @@ const BarA = () => {
     </div>   
    
     </div>
+    <div>
+     {Object.keys(expensesLastWeek)?.map((expenseId) => {
+          const expense = expenses[expenseId];
+          return (
+            <ul key={expenseId} 
+            style={{border:'2px solid green'}}
+            className='flex flex-row p-2 text-white space-x-24 bg-transparent  items-center justify-center'>
+               <li>{expense.date}</li>
+              <li>{expense.description}</li>
+              <li>${expense.expense}</li>
+              <li>{expense.category}</li>
+            </ul>
+          );
+         })}
+         <br />
+         <br />
+          {Object.keys(expensesLastMonth)?.map((expenseId) => {
+          const expense = expenses[expenseId];
+          return (
+            <ul key={expenseId} 
+            style={{border:'2px solid green'}}
+            className='flex flex-row p-2 text-white space-x-24 bg-transparent  items-center justify-center'>
+               <li>{expense.date}</li>
+              <li>{expense.description}</li>
+              <li>${expense.expense}</li>
+              <li>{expense.category}</li>
+            </ul>
+          );
+         })}
+         <br />
+         <br />
+
+          {Object.keys(expensesLastYear)?.map((expenseId) => {
+          const expense = expenses[expenseId];
+          return (
+            <ul key={expenseId} 
+            style={{border:'2px solid green'}}
+            className='flex flex-row p-2 text-white space-x-24 bg-transparent  items-center justify-center'>
+               <li>{expense.date}</li>
+              <li>{expense.description}</li>
+              <li>${expense.expense}</li>
+              <li>{expense.category}</li>
+            </ul>
+          );
+         })}
+
+    </div>
     </div>
   )
 }

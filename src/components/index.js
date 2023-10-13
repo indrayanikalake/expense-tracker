@@ -6,4 +6,5 @@ export { default as Profile } from './View/Profile';
 export { default as ResetPassword } from './SignIn/ResetPassword';
 export { default as BarA } from './ExpenseTracker/Bar';
 export { default  as Leaderboard} from './Leaderboard/Leaderboard';
-
+export { default as EnterNewpassword} from './SignIn/EnterNewpassword';
+export { default as UserExpense} from './ExpenseTracker/UserExpense';

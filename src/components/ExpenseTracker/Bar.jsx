@@ -26,25 +26,35 @@ const BarA = () => {
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
   const oneMonthAgo = new Date();
-  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() );
 
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  const lastYear = oneYearAgo.getFullYear();
+  const lastMonth = oneMonthAgo.getMonth();
+  const lastWeek = oneWeekAgo.getDate();
+  console.log(lastMonth,lastWeek,lastYear);
+  
 
   // Calculate expenses for last week, last month, and last year
-  const expensesLastWeek = Object.values(expenses).filter(
-    (expense) => new Date(expense.date) >= oneWeekAgo
-  );
-
-  const expensesLastMonth = Object.values(expenses).filter(
-    (expense) => new Date(expense.date) >= oneMonthAgo
-  );
-
-  const expensesLastYear = Object.values(expenses).filter(
-    (expense) => new Date(expense.date) >= oneYearAgo
-  );
+ 
 
  
+  
+  const expensesLastYear = Object.values(expenses).filter(
+    (expense) => expense.date.split('-')[0] <= lastYear
+  );
+  
+      const expensesLastMonth = Object.values(expenses).filter(
+    (expense) =>expense.date.split('-')[0]==2023 && expense.date.split('-')[1] <= lastMonth
+  );
+  
+     const expensesLastWeek = Object.values(expenses).filter(
+    (expense) =>expense.date.split('-')[0]==2023 && expense.date.split('-')[1] == lastMonth+1 && expense.date.split('-')[2] <= lastWeek
+  );
+  
+
+ console.log(expensesLastMonth);
   const totalLastWeek = expensesLastWeek.reduce(
     (total, expense) => total + expense.expense,
     0
@@ -124,51 +134,84 @@ const BarA = () => {
     </div>   
    
     </div>
-    <div>
-     {Object.keys(expensesLastWeek)?.map((expenseId) => {
-          const expense = expenses[expenseId];
-          return (
-            <ul key={expenseId} 
-            style={{border:'2px solid green'}}
-            className='flex flex-row p-2 text-white space-x-24 bg-transparent  items-center justify-center'>
-               <li>{expense.date}</li>
-              <li>{expense.description}</li>
-              <li>${expense.expense}</li>
-              <li>{expense.category}</li>
-            </ul>
-          );
-         })}
+    <div className='mt-10 p-8 text-white'>
+      <b className='text-lg text-white'>Last week</b>
+  <table className="table-auto border-collapse w-full">
+  <thead >
+    <tr>
+      <th className="border p-2">Date</th>
+      <th className="border p-2">Description</th>
+      <th className="border p-2">Expense</th>
+      <th className="border p-2">Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    {Object.keys(expensesLastWeek)?.map((expenseId) => {
+      const expense = expenses[expenseId];
+      return (
+        <tr key={expenseId} className="text-white bg-transparent">
+          <td className="border p-2">{expense.date}</td>
+          <td className="border p-2">{expense.description}</td>
+          <td className="border p-2">${expense.expense}</td>
+          <td className="border p-2">{expense.category}</td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
          <br />
          <br />
-          {Object.keys(expensesLastMonth)?.map((expenseId) => {
-          const expense = expenses[expenseId];
-          return (
-            <ul key={expenseId} 
-            style={{border:'2px solid green'}}
-            className='flex flex-row p-2 text-white space-x-24 bg-transparent  items-center justify-center'>
-               <li>{expense.date}</li>
-              <li>{expense.description}</li>
-              <li>${expense.expense}</li>
-              <li>{expense.category}</li>
-            </ul>
-          );
-         })}
+         <b className='text-lg text-white'>Last Month</b>
+  <table className="table-auto border-collapse w-full ">
+  <thead className='black-gradient'>
+    <tr className='black-gradient'>
+      <th className="border p-2">Date</th>
+      <th className="border p-2">Description</th>
+      <th className="border p-2">Expense</th>
+      <th className="border p-2">Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    {Object.keys(expensesLastMonth)?.map((expenseId) => {
+      const expense = expenses[expenseId];
+      return (
+        <tr key={expenseId} className="text-white bg-transparent">
+          <td className="border p-2">{expense.date}</td>
+          <td className="border p-2">{expense.description}</td>
+          <td className="border p-2">${expense.expense}</td>
+          <td className="border p-2">{expense.category}</td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
          <br />
          <br />
+          <b className='text-lg text-white'>Last Year</b>
+  <table className="table-auto border-collapse w-full">
+  <thead>
+    <tr>
+      <th className="border p-2">Date</th>
+      <th className="border p-2">Description</th>
+      <th className="border p-2">Expense</th>
+      <th className="border p-2">Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    {Object.keys(expensesLastYear)?.map((expenseId) => {
+      const expense = expenses[expenseId];
+      return (
+        <tr key={expenseId} className="text-white bg-transparent">
+          <td className="border p-2">{expense.date}</td>
+          <td className="border p-2">{expense.description}</td>
+          <td className="border p-2">${expense.expense}</td>
+          <td className="border p-2">{expense.category}</td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
 
-          {Object.keys(expensesLastYear)?.map((expenseId) => {
-          const expense = expenses[expenseId];
-          return (
-            <ul key={expenseId} 
-            style={{border:'2px solid green'}}
-            className='flex flex-row p-2 text-white space-x-24 bg-transparent  items-center justify-center'>
-               <li>{expense.date}</li>
-              <li>{expense.description}</li>
-              <li>${expense.expense}</li>
-              <li>{expense.category}</li>
-            </ul>
-          );
-         })}
 
     </div>
     </div>

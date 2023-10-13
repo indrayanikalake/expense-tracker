@@ -8,11 +8,11 @@ const Leaderboard = () => {
     <div>
       {data.map((user,index)=>(
         <div>
-        <ul key={index} className='text-white text-lg flex flex-row m-4 mx-4 p-10'>
+        <ul key={index} className='text-white space-x-10 text-lg flex flex-row m-4 mx-4 p-10'>
           <li className='mr-4'>{index}</li>
           <li className='mr-4'>{user.email.split('@')[0]}</li>
           <li className='mr-4'>{user.total_cost}</li>
-          <input className='  mr-10 p-1' type='range' value={user.total_cost} />
+          <input className='  mr-10 p-1 w-[500px]' type='range' value={user.total_cost} />
         </ul>
         
         </div>

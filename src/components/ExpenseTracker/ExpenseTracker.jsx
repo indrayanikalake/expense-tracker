@@ -31,20 +31,24 @@ const ExpenseTracker = () => {
   const descriptionRef = useRef();
   const categoryRef = useRef();
   const dateRef = useRef();
+  const limitRef = useRef(5);
   const incomeRef = useRef(null);
   const [income, setIncome] = useState(0);
   const email = localStorage.getItem('email')?.replace('@','').replace('.','');
   const alanKey='bb966699a022619e2e4f6d2eb1c2a4732e956eca572e1d8b807a3e2338fdd0dc/stage';
   const token = localStorage.getItem('token');
- 
+   const pageLimit  =  Number(limitRef?.current.value);
    const [dowload,setDownload] = useState(false);
    const incomeValue = incomeRef.current? incomeRef.current.value :0;
+   let pageNum = 1;
   console.log(incomeValue);
 console.log(token);
  console.log(expenses);
 console.log(paymentSuccess);
   const data = Object.values(expenses).map((expense)=>expense);
   console.log(data);
+  const [total, setTotal] = useState();
+  const [loading, setLoading] = useState(false);
 
   const headers =[
     {label: 'Description', key:'description' },
@@ -53,7 +57,7 @@ console.log(paymentSuccess);
   ];
 
   useEffect(() =>{
-    fetchData();
+    fetchDataFromServer();
   },[]);
 
   useEffect(() => {
@@ -65,29 +69,57 @@ console.log(paymentSuccess);
     });
   }, []);
 
-  const fetchData = async () =>{
+  const fetchDataFromServer = async (page, limit) =>{
     console.log('fetching');
     const config={
       headers:{
         Authorization: `Bearer ${token}`
-      }
+
+      },
+       params: {
+          page: page, //2
+          size: limit, //5
+        },
     }
     try{
+    setLoading(true);
     const getResponse = await axios.get('http://localhost:7000/expense',config);
-    console.log(getResponse);
+    setLoading(false);
+    console.log('response',getResponse);
+    setTotal(getResponse.data.total);
+
     const user= await axios.get('http://localhost:7000/user',config);
     console.log(user.data[0].isPremiumUser);
     setIsPremiumUser(user.data[0].isPremiumUser);
     if(getResponse.data === null){
       getResponse.data = {};
     }
-    dispatch(setExpenses(getResponse.data));
+    dispatch(setExpenses(getResponse.data.data));
     console.log(Object.keys(getResponse.data).map((expense)=>expense));
     console.log(expenses);
     }catch(error){
       console.log(error);
     }
   }
+
+   const totalPageCalculator=(total,limit)=>{
+    console.log(total)
+    console.log(limit)
+    console.log(total/limit)
+            const pages = [];
+
+            for(let i = 0; i <= ~~(total/limit) ;i++){
+                pages.push(i+1)
+            }
+            console.log(pages);
+            return pages;
+    }   
+
+    const loadPageClickHandler=(num,limitValue)=>{
+            console.log('this is limit value',typeof limitValue , limitValue)
+            fetchDataFromServer(num,Number(limitValue))
+     }
+
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -121,7 +153,7 @@ console.log(paymentSuccess);
        newExpenseWithId, config
        )
        console.log(response);
-       fetchData();
+        fetchDataFromServer();
      
     }catch(error){
        console.log(error);
@@ -181,12 +213,15 @@ console.log(paymentSuccess);
     return counts},{});
     console.log(categoryCount);
 
-  const totalExpenses = Object.values(expenses).reduce((total, expense)=>
-  total+ expense.expense , 0);
+  const totalExpenses = Object.values(expenses).reduce((total, exp)=>
+  total+ exp.expense , 0);
   console.log(totalExpense);
 
   const balance = income-totalExpense;
 
+  const limit= 5;
+  
+ 
 
   //total expenses for each category
   const categoryTotals = {};
@@ -235,7 +270,7 @@ console.log(paymentSuccess);
       
       {isVisible && (
         <div>
-          <Card className='w-[200px] md:h-full mx-0.5 my-12 p-12 text-start '
+          <Card className='w-[200px] md:h-full mx-0.5 space-y-10 my-12 p-12 text-start '
           style={{boxShadow:'1px 1px 1px rgb(250, 251, 249)',position:'absolute', zIndex:'1', padding:'5rem'}}>
              <button type='button' onClick={()=>{removeLocal()}}>
             <Link to='/signIn' 
@@ -247,6 +282,11 @@ console.log(paymentSuccess);
          <Link to='/leaderboard'>
             <button  className='text-white violet-gradient' type='button' onClick={()=>dispatch(getLeaderboardData())}>
            Dashboard
+           </button>
+           </Link>
+             <Link to='/userExpense'>
+            <button  className='text-white violet-gradient' type='button' >
+            all expenses
            </button>
            </Link>
             <Link to='/optimizedUser'>
@@ -465,7 +505,27 @@ console.log(paymentSuccess);
             </ul>
           );
          })}
-        
+          <nav aria-label="Page navigation example " style={{marginTop:'2rem'}} className='text-white'>
+                        <ul class="pagination">
+                           
+                            {
+                                totalPageCalculator(total,limit).map((num)=> {
+                                    pageNum = num
+                                return <li key={num} onClick={()=>loadPageClickHandler(num,pageLimit)} class="page-item"><button class="page-link">{num}</button></li>})
+                            }
+                           
+                            <div className='d-flex flex-column' style={{marginLeft:'1rem',marginTop:'2rem'}} >
+                            <label for="selectLimit">Select Limit</label>
+                            <select id='selectLimit' class="page-item " ref={limitRef} >
+                                <option class="page-link" value={5}>5</option>
+                                <option class="page-link" value={10}>10</option>
+                                <option class="page-link" value={15}> 15</option>
+                            </select>
+                            </div>
+                           
+                        </ul>
+                    </nav>
+         
          </div>
         )}
         </div>

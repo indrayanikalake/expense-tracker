@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './App.css';
-import { BarA, ExpenseTracker, Leaderboard, ResetPassword, SignIn, SignUp, View } from './components';
+import { BarA, EnterNewpassword, ExpenseTracker, Leaderboard, ResetPassword, SignIn, SignUp, UserExpense, View } from './components';
 import { ContextProvider } from './components/Context/Context';
 import Profile from './components/View/Profile';
 import { motion } from 'framer-motion';
@@ -34,6 +34,8 @@ function App() {
           <Route exact path='/shopping' element={<Shoppingcart />} />
            <Route exact path='/leaderboard' element={<Leaderboard /> } />
           <Route exact path='/optimizedUser' element={<BarA /> } />
+            <Route exact path='/resetpassword/:uuid' element={<EnterNewpassword /> } />
+          <Route exact path='/userExpense' element={<UserExpense /> } />
         </Routes>
         </div>
     </Router>

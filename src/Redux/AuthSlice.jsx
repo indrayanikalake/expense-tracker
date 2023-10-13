@@ -26,7 +26,7 @@ export const { login, logout } = authSlice.actions;
 const authReducer =authSlice.reducer;
 export default authReducer;
 
-const resetPassword = (email,password, uuid) =>{
+ export const resetPassword = (email,password, uuid) =>{
     return async(dispatch, getState)=>{
         try{
             const response = await axios.post('http://localhost:7000/password/resetPassword/${uuid}',{emai:email, password:pawword})

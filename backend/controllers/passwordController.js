@@ -73,10 +73,10 @@ const sendEmail =  asyncHandler(async (req,res)=>{
                           <p>We received a request to reset the password associated with this email address. If you didn't initiate this request, you can safely ignore this email.</p>
                           <p>To reset your password, please click the button below:</p>
                           <p style="text-align: center;">
-                              <a href="http://localhost:3000/resetpassword/${uuid}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
+                              <a href="http://localhost:5173/resetpassword/${uuid}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
                           </p>
                           <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>
-                          <p>http://localhost:3000/resetpassword/${uuid}</p>
+                          <p>http://localhost:5173/resetpassword/${uuid}</p>
                          
                          
                           <p>Thank you,</p>

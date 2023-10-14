@@ -4,7 +4,8 @@ const router = require('./routes/router');
 const expenseRouter = require('./routes/expenseRouter');
 const paymentRouter = require('./routes/paymentRouter');
 const premiumRouter = require('./routes/premiumRouter');
-const sendEmailRouter = require('./routes/sendEmailRouter')
+const sendEmailRouter = require('./routes/sendEmailRouter');
+const downloadRouter = require('./routes/downloadRouter');
 const sequelize = require('./util/database');
 const dotenv = require('dotenv');
 const User = require('./model/user');
@@ -21,7 +22,8 @@ app.use(express.json());
 app.use('/user',router);
 app.use('/expense',expenseRouter);
 app.use('/premium/showDashboard', premiumRouter);
-app.use('/password', sendEmailRouter)
+app.use('/password', sendEmailRouter);
+app.use('/downloadexpense',downloadRouter);
 app.use(paymentRouter);
 
 

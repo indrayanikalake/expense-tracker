@@ -3,6 +3,7 @@ const Expense = require('../model/expense');
 const User = require('../model/user');
 const sequelize = require('../util/database');
 
+
 const postExpense = asyncHandler(async (req, res)=>{
      const transactionObj = await sequelize.transaction();
 const {  expense, description, category, date } = req.body;

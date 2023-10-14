@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import alanBtn from '@alan-ai/alan-sdk-web';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Tilt } from 'react-tilt';
 import { Context } from '../Context/Context';
 import { styles } from '../../styles';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { setExpenses, addExpenses, deleteExpenses, editExpense } from '../../Redux/ExpenseSlice'
+import { setExpenses, addExpenses, deleteExpenses, editExpense, dowloadExpense } from '../../Redux/ExpenseSlice'
 import { toggleTheme } from '../../Redux/ThemeSlice';
 import { CSVLink } from 'react-csv';
 import { toggleCartVisibility } from '../../Redux/CartSlice';
@@ -21,7 +21,9 @@ import { getLeaderboardData } from '../../Redux/LeaderboardSlice';
 import BarA from './Bar';
 
 const ExpenseTracker = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const url = useSelector((state)=> state.expenses.url);
   const expenses = useSelector((state) => state.expenses.expenses);
   const isLightMode = useSelector((state) =>state.theme.lightMode);
   const isVisible = useSelector((state) =>state.cart.isVisible);
@@ -49,6 +51,7 @@ console.log(paymentSuccess);
   console.log(data);
   const [total, setTotal] = useState();
   const [loading, setLoading] = useState(false);
+  console.log("This is url:",url);
 
   const headers =[
     {label: 'Description', key:'description' },
@@ -259,6 +262,18 @@ console.log(paymentSuccess);
       console.log(error);
     }
   }
+
+
+  const handleDownloadExpense = async() =>{
+   try{
+    await dispatch(dowloadExpense());
+   return <a href={url} />
+
+   }catch(error){
+     console.log(error);
+   }
+  }
+
   return (
     <div className={`${isLightMode? 'black-gradient' : 'bg-white'}`}>
       <div className='flex flex-col ' >
@@ -315,13 +330,15 @@ console.log(paymentSuccess);
       )}
        {dowload && (
     <div>
-      <CSVLink data={data} headers={headers} filename='expenseData.csv'>
+     
 
       <button className='text-white'
-      style={{ position:'absolute', top:'55px', left:'750px'}}>
+      style={{ position:'absolute', top:'55px', left:'750px'}} 
+      onClick={handleDownloadExpense}
+      >
       Download
       </button>
-      </CSVLink>
+     
       </div>
       )}
       </div>
@@ -506,12 +523,12 @@ console.log(paymentSuccess);
           );
          })}
           <nav aria-label="Page navigation example " style={{marginTop:'2rem'}} className='text-white'>
-                        <ul class="pagination">
+                        <ul class="">
                            
                             {
                                 totalPageCalculator(total,limit).map((num)=> {
                                     pageNum = num
-                                return <li key={num} onClick={()=>loadPageClickHandler(num,pageLimit)} class="page-item"><button class="page-link">{num}</button></li>})
+                                return <li  key={num} onClick={()=>loadPageClickHandler(num,pageLimit)} class="page-item"><button class="page-link">{num}</button></li>})
                             }
                            
                             <div className='d-flex flex-column' style={{marginLeft:'1rem',marginTop:'2rem'}} >

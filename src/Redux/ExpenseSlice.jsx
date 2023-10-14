@@ -7,7 +7,8 @@ const expenseSlice = createSlice({
     name:'expenses',
     initialState:{
         expenses: [],
-        url: ''
+        url: null,
+        updated: {}
     },
     reducers:{
         setExpenses(state, action){
@@ -28,12 +29,15 @@ const expenseSlice = createSlice({
         },
         setUrl(state, action){
             state.url= action.payload;
+        },
+        setUpdated(state,action){
+            state.updated = action.payload
         }
     }
 
 })
 
-export const { setExpenses, addExpenses, deleteExpenses, editExpense, setUrl } = expenseSlice.actions;
+export const { setExpenses, addExpenses, deleteExpenses, editExpense, setUrl, setUpdated } = expenseSlice.actions;
 const expenseReducer = expenseSlice.reducer;
 export default expenseReducer;
 

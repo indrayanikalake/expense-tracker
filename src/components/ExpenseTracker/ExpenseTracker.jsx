@@ -6,7 +6,7 @@ import { Context } from '../Context/Context';
 import { styles } from '../../styles';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { setExpenses, addExpenses, deleteExpenses, editExpense, dowloadExpense } from '../../Redux/ExpenseSlice'
+import { setExpenses, addExpenses, deleteExpenses, editExpense, dowloadExpense, setUpdated } from '../../Redux/ExpenseSlice'
 import { toggleTheme } from '../../Redux/ThemeSlice';
 import { CSVLink } from 'react-csv';
 import { toggleCartVisibility } from '../../Redux/CartSlice';
@@ -23,16 +23,18 @@ import BarA from './Bar';
 const ExpenseTracker = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const updated = useSelector((state)=>state.expenses.updated);
   const url = useSelector((state)=> state.expenses.url);
   const expenses = useSelector((state) => state.expenses.expenses);
   const isLightMode = useSelector((state) =>state.theme.lightMode);
   const isVisible = useSelector((state) =>state.cart.isVisible);
   const paymentSuccess = useSelector((state)=>state.payment.paymentSuccess);
   const [isPremiumUser, setIsPremiumUser] = useState(false);
-  const expenseRef = useRef();
-  const descriptionRef = useRef();
-  const categoryRef = useRef();
-  const dateRef = useRef();
+  const [isUpdated , setIsUpdated] = useState(false);
+  let expenseRef = useRef();
+  let descriptionRef = useRef();
+  let categoryRef = useRef();
+  let dateRef = useRef();
   const limitRef = useRef(5);
   const incomeRef = useRef(null);
   const [income, setIncome] = useState(0);
@@ -62,6 +64,13 @@ console.log(paymentSuccess);
   useEffect(() =>{
     fetchDataFromServer();
   },[]);
+
+  useEffect(()=>{
+     expenseRef.current.value=updated.expense;
+     categoryRef.current.value = updated.category;
+     dateRef.current.value = updated.date;
+     descriptionRef.current.value = updated.description;
+  },[updated])
 
   useEffect(() => {
     alanBtn({
@@ -144,7 +153,23 @@ console.log(paymentSuccess);
       ...newExpense,
         localId: localId
     }
-    try{
+    console.log("updated?",isUpdated);
+    if(isUpdated){
+      const config = {
+      headers:{
+        Authorization:` Bearer ${token}`,
+        "Content-Type":'application/json'
+      }
+    }
+    try {
+      await axios.put(`http://localhost:7000/user/${updated.id}`, newExpense, config);
+      fetchDataFromServer();
+    } catch (error) {
+      console.log(error);
+    }
+    setIsUpdated(false);
+    }
+   else{ try{
       const config = {
         headers:{
           Authorization:`Bearer ${token}`,
@@ -161,7 +186,7 @@ console.log(paymentSuccess);
     }catch(error){
        console.log(error);
     }
-
+}
     // Clear the form fields after adding the expense
     expenseRef.current.value = '';
     descriptionRef.current.value = '';
@@ -172,28 +197,34 @@ console.log(paymentSuccess);
   
   };
 
-  const handleEdit = async (expenseId) => {
+  const handleEdit = async (expense) => {
    
 
     const updatedExpense = {
-      expense: parseFloat(expenseRef.current.value),
-      description: descriptionRef.current.value,
-      category: categoryRef.current.value,
+      id: expense.id,
+      date : expense.date,
+      expense: expense.expense,
+      description: expense.description,
+      category: expense.category,
     };
-    dispatch(editExpense({id : expenseId, updatedExpense}))
-    try {
-      await axios.put(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/${email}/${expenseId}.json`, updatedExpense);
-      fetchData();
-    } catch (error) {
-      console.log(error);
-    }
+
+    dispatch(editExpense({id : expense.id, updatedExpense}));
+    dispatch(setUpdated(updatedExpense));
+    setIsUpdated(true);
+
+    
   };
 
   const handleDelete = async (expenseId) => {
     dispatch(deleteExpenses(expenseId));
+    const config = {
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
+    }
     try {
-      await axios.delete(`https://ecommerce-project-88866-default-rtdb.firebaseio.com/${email}/${expenseId}.json`);
-      fetchData();
+      await axios.delete(`http://localhost:7000/userdelete/${expenseId}`,config);
+      fetchDataFromServer();
     } catch (error) {
       console.log(error);
     }
@@ -267,7 +298,8 @@ console.log(paymentSuccess);
   const handleDownloadExpense = async() =>{
    try{
     await dispatch(dowloadExpense());
-   return <a href={url} />
+     navigate(url);
+
 
    }catch(error){
      console.log(error);
@@ -285,27 +317,23 @@ console.log(paymentSuccess);
       
       {isVisible && (
         <div>
-          <Card className='w-[200px] md:h-full mx-0.5 space-y-10 my-12 p-12 text-start '
+          <Card className='w-[200px] md:h-[500px] mx-0.5 space-y-10 my-12 p-12 text-start '
           style={{boxShadow:'1px 1px 1px rgb(250, 251, 249)',position:'absolute', zIndex:'1', padding:'5rem'}}>
              <button type='button' onClick={()=>{removeLocal()}}>
             <Link to='/signIn' 
-            className='text-white violet-gradient'>Sign Out</Link></button>
-             <button  className='text-white violet-gradient' type='button' onClick={handlePayment}>
+            className='text-white violet-gradient '>Sign Out</Link></button>
+             <button  className='text-white violet-gradient mb-3 p-3' type='button' onClick={handlePayment}>
            Buy Premium</button>
          {isPremiumUser && ( 
           <>
          <Link to='/leaderboard'>
-            <button  className='text-white violet-gradient' type='button' onClick={()=>dispatch(getLeaderboardData())}>
+            <button  className='text-white violet-gradient mt-5 mb-3 p-2' type='button' onClick={()=>dispatch(getLeaderboardData())}>
            Dashboard
            </button>
            </Link>
-             <Link to='/userExpense'>
-            <button  className='text-white violet-gradient' type='button' >
-            all expenses
-           </button>
-           </Link>
+            
             <Link to='/optimizedUser'>
-            <button  className='text-white violet-gradient' type='button' >
+            <button  className='text-white violet-gradient mt-5 p-3' type='button' >
              Optimized User
            </button>
            </Link>
@@ -331,14 +359,15 @@ console.log(paymentSuccess);
        {dowload && (
     <div>
      
-
+     {!url &&( 
       <button className='text-white'
       style={{ position:'absolute', top:'55px', left:'750px'}} 
       onClick={handleDownloadExpense}
       >
       Download
-      </button>
-     
+      </button>)}
+     {url && (<a style={{ position:'absolute', top:'55px', left:'750px'}} 
+      className='text-white rounded-[20px] black-gradient w-[100px] h-[40px]' href={url} download="myFile.pdf">Download PDF</a>)}
       </div>
       )}
       </div>
@@ -445,7 +474,7 @@ console.log(paymentSuccess);
           Expense:
           <input
           className='mt-2 bg-transparent'
-          type='number' step='0.01' ref={expenseRef} required />
+          type='number'  step='0.01'  ref={expenseRef} required />
         </label>
         <label className='flex flex-col text-start mt-2' >
           Description:
@@ -500,23 +529,23 @@ console.log(paymentSuccess);
             <ul key={expenseId} 
             style={{border:'2px solid green'}}
             className='flex flex-row p-2 text-white space-x-24 bg-transparent  items-center justify-center'>
-               <li>{expense.date}</li>
+               <li >{expense.date}</li>
               <li>{expense.description}</li>
               <li>${expense.expense}</li>
-              <li>{expense.category}</li>
+              <li>{expense.category}</li> 
              
               <button
               className='green-text-gradient font-bold '
                 type='button'
                 onClick={() => {
                 
-                  handleEdit(expenseId);
+                  handleEdit(expense);
                 }}
               >
                 Edit
               </button>
               <button className='rounded orange-text-gradient font-bold'
-              type='button' onClick={() => handleDelete(expenseId)}>
+              type='button' onClick={() => handleDelete(expense.id)}>
                 Delete
               </button>
             </ul>

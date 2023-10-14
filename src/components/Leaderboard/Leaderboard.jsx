@@ -6,6 +6,8 @@ const Leaderboard = () => {
   const  data  = useSelector((state)=>state.leaderboard.data);
   const [value, setValue] = useState(20000);
   const [success, setSuccess] = useState(false);
+  
+  
 
   console.log(data);
 
@@ -15,6 +17,7 @@ const Leaderboard = () => {
    },10)
   },[]);
 
+  
   return (
     <div>
       {data.map((user,index)=>(

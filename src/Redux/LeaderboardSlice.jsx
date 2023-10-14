@@ -6,11 +6,14 @@ const token = localStorage.getItem('token');
 const leaderBoardSlice = createSlice({
     name:'leaderboard',
     initialState:{
+        visible:false,
         data:[],
     },
     reducers:{
         updateData(state,action){
             state.data = action.payload;
+        },setVisible(state,action){
+            state.visible= action.payload;
         }
     }
 })
@@ -30,7 +33,8 @@ export const getLeaderboardData=()=>{
             "Content-Type":"application/json"
         }})
         console.log(response.data.leaderboardofusers)
-        dispatch(updateData(response.data.leaderboardofusers))
+        dispatch(updateData(response.data.leaderboardofusers));
+        dispatch(setVisible(true));
        
       } catch (error) {
         console.log(error)

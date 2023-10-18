@@ -69,4 +69,6 @@ const getUser = asyncHandler(async (req,res)=>{
         throw new Error(error);
     }
 })
+
+
 module.exports = {registerUser, authUser,getUser };

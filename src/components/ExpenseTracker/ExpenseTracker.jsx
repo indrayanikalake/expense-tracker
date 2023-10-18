@@ -120,7 +120,7 @@ console.log(paymentSuccess);
     console.log(total/limit)
             const pages = [];
 
-            for(let i = 0; i <= ~~(total/limit) ;i++){
+            for(let i = 0; i <= (total/limit) ;i++){
                 pages.push(i+1)
             }
             console.log(pages);

@@ -1,7 +1,30 @@
-const {DataTypes} = require('sequelize');
-const sequelize = require('../util/database');
+//const {DataTypes} = require('sequelize');
+//const sequelize = require('../util/database');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
+const UserSchema = new Schema({
+    email:{
+        type:String,
+        required:true,
+    },
+    password:{
+        type:String,
+        required:true,
+        minLength:3
+    },
+    isPremiumUser:{
+        type:Boolean,
+        default:false,
+    },
+    total_cost:{
+        type:Number
+    },
+})
 
+module.exports = mongoose.model("user", UserSchema);
+
+/*
 const User = sequelize.define('user',{
         id:{
         type: DataTypes.INTEGER,
@@ -27,3 +50,5 @@ const User = sequelize.define('user',{
 })
 
 module.exports = User;
+*/
+

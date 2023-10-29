@@ -4,6 +4,7 @@ const Order = require('../model/order');
 const User = require('../model/user');
 const crypto = require("crypto");
 const RazorPay = require('razorpay');
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -15,13 +16,12 @@ const instance = new RazorPay({
 
 const createOrder = asyncHandler(async (req,res)=>{
     console.log('hi');
-   const transactionObj = await sequelize.transaction();
    try{
     instance.orders.create(
         {amount:'5000', currency:"INR"},
         async (err, order)=>{
             if(err){
-                console.log(err);
+               
                 throw new Error(err);}
             console.log("Orders:", order);
             try{
@@ -29,23 +29,17 @@ const createOrder = asyncHandler(async (req,res)=>{
                     orderId: order.id,
                     status:"Pending",
            
-                },
-                {transaction:transactionObj}
+                }
                 )
-                await transactionObj.commit();
-
             }catch(err){
-            await transactionObj.rollback();
             console.log(err);
             res.status(500).send("sorry payment request failed, not able to process the request successfully.");
-            }
-            
+            }           
             res.status(200).json({...order, key_id:instance.key_id})
         }
     )
 
    }catch(error){
-      transactionObj.rollback();
       console.log(error);
         res.status(403)
         .json({ message: "client does not have the necessary permissions or authorization to access the requested resource or perform the requested action.",
@@ -55,7 +49,8 @@ const createOrder = asyncHandler(async (req,res)=>{
 
 
 const verifyPayment = asyncHandler(async (req, res)=>{
-    const transactionObj = await sequelize.transaction()
+    const session = await mongoose.startSession();
+    session.startTransaction();
     
     const body =
       req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
@@ -67,14 +62,16 @@ const verifyPayment = asyncHandler(async (req, res)=>{
 
     if (expectedSignature === req.body.razorpay_signature) {
       try {
-        await Order.update({status: 'SUCCESS'}, {where: { orderId: req.body.razorpay_order_id },transaction:transactionObj
-        })
+      await Order.updateOne( { orderId: req.body.razorpay_order_id },
+          { $set: { status: 'SUCCESS' } }).session(session);
 
-        await User.update({isPremiumUser:true},{where:{id:req.userId},transaction:transactionObj})
-
-        await transactionObj.commit()
+         const response = await User.updateOne({_id:req.userId},{$set:{isPremiumUser:true}}).session(session);
+        console.log(response);
+         await session.commitTransaction();
+        session.endSession();
       } catch (error) {
-        await transactionObj.rollback()
+        await session.abortTransaction();
+        session.endSession();
         console.log(error)
       }
       res.status(200).json({ message: "payment sucessfull" });

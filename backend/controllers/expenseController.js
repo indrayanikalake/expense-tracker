@@ -5,37 +5,41 @@ const sequelize = require('../util/database');
 
 
 const postExpense = asyncHandler(async (req, res)=>{
-     const transactionObj = await sequelize.transaction();
+const session = await  Expense.startSession();
+session.startTransaction();
 const {  expense, description, category, date } = req.body;
 console.log(expense, description, category, date);
 console.log(req.userId);
 try{
-    const response = await Expense.create({
+    const responseDoc =new Expense({
         userId:req.userId,
         expense, 
         description, 
         category, 
         date
 
-    },{transaction: transactionObj})
-    
-   const user = await User.findAll( 
-    
-    {where:{id: req.userId }}
-    );
+    });
 
-   await User.update(
+    const response = await responseDoc.save();
+    
+   const user = await User.findById(req.userId);
+   user.total_cost += Number(req.body.expense);
+   await user.save();
+
+  /* await User.update(
    { total_cost: user[0].total_cost + Number(req.body.expense) },
    {where:{id:req.userId}, transaction : transactionObj},
    
-   );
+   );*/
 
-   await transactionObj.commit();
+    await session.commitTransaction();
+    session.endSession();
    console.log(response);
     res.status(200).send("successful");
 
 }catch(err){
-    await transactionObj.rollback();
+    await session.abortTransaction();
+    session.endSession();
     console.log(err.message);
     
     res.status(400);
@@ -52,13 +56,9 @@ try{
     const size = req.query.size ? Number(req.query.size): 5;
     const skip = (page-1)*size;
 
-    const total = await Expense.count({where:{userId: req.userId}});
+    const total = await Expense.countDocuments({userId: req.userId});
 
-    const data = await Expense.findAll({
-        where:{userId: req.userId},
-        offset:skip,
-        limit:size
-});
+    const data = await Expense.find({userId: req.userId}).skip(skip).limit(size);
 
     console.log(data);
     res.status(200).json({data, total, page , size});
@@ -71,24 +71,33 @@ try{
 })
 
 const updateExpense = asyncHandler(async (req,res)=>{
-    const transactionObj = await sequelize.transaction();
+    const session = await Expense.startSession();
+    session.startTransaction();
     const  {expense, description, category, date} = req.body;
     console.log(expense, description, category , date);
      try{
-        await Expense.update(
-            {expense : expense , description:description , category:category, date:date},
-            {where:
+       const updatedExpense = await Expense.findOneAndUpdate(
             {userId : req.userId,
-            id:req.params.id
+            _id:req.params.id
             }, 
-            transaction : transactionObj
-            }
+           {$set:{expense , description , category, date}},
+            {new:true} //return updated document
+            
+            
             );
-            await transactionObj.commit();
+             if (!updatedExpense) {
+                   await session.abortTransaction();
+                 session.endSession();
+               return res.status(404).send('Expense not found');
+            }
+            await session.commitTransaction();
+            session.endSession();
+             
             res.status(200).send('successful');
 
      }catch(error){
-        await transactionObj.rollback();
+        await session.abortTransaction();
+        session.endSession();
         console.log(error);
         res.status(400);
         throw new Error('sorry, data is not updated')
@@ -97,34 +106,31 @@ const updateExpense = asyncHandler(async (req,res)=>{
 })
 
 const deleteExpense = asyncHandler(async (req,res)=>{
-    const transactionObj = await sequelize.transaction();
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try{
-      const user = await User.findAll({where:{id:req.userId}});
+      const user = await User.find({id:req.userId}).session(session);
 
-      const expense = await Expense.findAll( { where: { id: req.params.id } } && {
-          where: { userId: req.userId, id: req.params.id }
-          
-        });
+      const expense = await Expense.findOneAndDelete({ userId: req.userId, id: req.params.id });
 
-     await User.update({
-        total_cost:user[0].total_cost - expense[0].expense
-      },
-      {where:{id:req.userId}, transaction: transactionObj});
+       if (!user || !expense) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(404).send("Expense or user not found");
+    }
+
+     user.total_cost -= expense.expense;
+     await user.save({session});
 
 
-     await Expense.destroy(
-        { where: { id: req.params.id } } && {
-          where: { userId: req.userId, id: req.params.id },
-          transaction: transactionObj,
-        }
-      );
-
-      await transactionObj.commit();
+    await session.commitTransaction();
+    session.endSession();
 
       res.status(200).send("Expense Deleted Successfully.");
 
     }catch(error){
-        await transactionObj.rollback();
+        await session.abortTransaction();
+        session.endSession();
         console.log(error);
         res.status(400);
         throw new Error(error)

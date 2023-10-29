@@ -101,8 +101,9 @@ console.log(paymentSuccess);
     setTotal(getResponse.data.total);
 
     const user= await axios.get('http://localhost:7000/user',config);
-    console.log(user.data[0].isPremiumUser);
-    setIsPremiumUser(user.data[0].isPremiumUser);
+    console.log(user);
+    console.log(user.data.isPremiumUser);
+    setIsPremiumUser(user.data.isPremiumUser);
     if(getResponse.data === null){
       getResponse.data = {};
     }
@@ -322,7 +323,11 @@ console.log(paymentSuccess);
              <button type='button' onClick={()=>{removeLocal()}}>
             <Link to='/signIn' 
             className='text-white violet-gradient '>Sign Out</Link></button>
-             <button  className='text-white violet-gradient mb-3 p-3' type='button' onClick={handlePayment}>
+             <button  className='text-white violet-gradient mb-3 p-3' type='button' 
+              onClick={() => {
+                        handlePayment(); // Call handlePayment function
+                        fetchDataFromServer(); // Call fetchDataFromServer function
+              }}>
            Buy Premium</button>
          {isPremiumUser && ( 
           <>

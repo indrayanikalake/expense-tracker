@@ -39,10 +39,7 @@ const uploadToS3 = asyncHandler(async ( data, fileName)=>{
 const downloadExpense = asyncHandler( async (req,res)=>{
     
     try{
-        const expenses = await Expense.findAll({
-            where:{userId:req.userId},
-
-        });
+        const expenses = await Expense.find({userId:req.userId});
 
         const stringifyExpenses = JSON.stringify(expenses);
         const fileName = `expenses ${req.userId} ${new Date()}.txt`;

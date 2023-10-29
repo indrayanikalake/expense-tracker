@@ -14,5 +14,7 @@ router.route('/login').post(authUser);
 
 module.exports = router;
 
+/*
 User.hasMany(Expense);
 Expense.belongsTo(User);
+*/

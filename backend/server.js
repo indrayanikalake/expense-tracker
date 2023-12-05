@@ -1,16 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-const router = require('./routes/router');
-const expenseRouter = require('./routes/expenseRouter');
-const paymentRouter = require('./routes/paymentRouter');
-const premiumRouter = require('./routes/premiumRouter');
-const sendEmailRouter = require('./routes/sendEmailRouter');
-const downloadRouter = require('./routes/downloadRouter');
 const sequelize = require('./util/database');
 const dotenv = require('dotenv');
-const User = require('./model/user');
-const Expense = require('./model/expense');
+const User = require('./models/user');
+const Expense = require('./models/expense');
 const mongoose = require('mongoose');
+const { user, expense, premium, sendEmail, download, payment } = require('./routes');
 
 dotenv.config();
 
@@ -20,27 +15,26 @@ app.use(cors());
 app.use(express.json());
 
 
-app.use('/user',router);
-app.use('/expense',expenseRouter);
-app.use('/premium/showDashboard', premiumRouter);
-app.use('/password', sendEmailRouter);
-app.use('/downloadexpense',downloadRouter);
-app.use(paymentRouter);
+app.use('/user',user);
+app.use('/expense',expense);
+app.use('/premium/showDashboard', premium);
+app.use('/password', sendEmail);
+app.use('/downloadexpense',download);
+app.use(payment);
 
 
 
-mongoose.connect(process.env.MONGO_CONNECTION_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGO_CONNECTION_URI)
   .then(() => {
     console.log('Connected to MongoDB');
-    app.listen(7000, () => console.log('Server starts on localhost:7000'));
+    app.listen(3000, () => console.log('Server starts on localhost:7000'));
   })
   .catch((error) => {
     console.error('MongoDB connection error:', error);
   });
   const db = mongoose.connection;
+
+
 
 /*
 sequelize.sync()
